@@ -1,0 +1,44 @@
+$primary: #8e80ef;
+$secondary: #ffaa1a;
+$primary-text: #121212;
+$secondary-text: #dbdbdb;
+$body-bg: rgb(80, 104, 131);
+
+// Mixins
+@mixin d-flex {
+    display: flex;
+}
+
+@mixin d-flex-column {
+    flex-direction: column;
+}
+
+@mixin d-flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin d-flex-v-center {
+    align-items: center;
+}
+
+@mixin d-flex-h-center {
+    justify-content: center;
+}
+
+@mixin d-flex-between {
+    justify-content: space-between;
+}
+
+@mixin fluid {
+    width: 100%;
+    height: 100%;
+}
+
+@mixin flex-grow {
+    flex-grow: 1;
+}
+
+@mixin drop-shadow {
+    box-shadow: 2px 4px 12px 1px rgba(142, 128, 239, 0.3);
+}

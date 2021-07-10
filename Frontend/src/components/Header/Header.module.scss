@@ -1,0 +1,72 @@
+@import '../../styles/variables.scss';
+
+.header {
+   position: sticky;
+   display: flex;
+   top: 0;
+   left: 0;
+   max-height: 65px;
+   height: 65px;
+   width: 100%;
+   background-color: rgba(21, 22, 26, 0.712);
+/*    border-bottom-left-radius: 40px;   */
+/*    border-bottom: 1px solid #8d8d8d; */
+   &:after {
+   position: absolute;
+   content: "";
+   background: rgba(255, 255, 255, 0.226);
+   
+   bottom: 20px;
+   left: 20%;
+   right: 20%;
+   height: 1px;
+   width: 60%;
+   }
+   .menu_content{
+      justify-content: center;
+      width: 78px;
+      display: flex;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.226);
+      align-items: center;
+      background-color: rgba(24, 20, 20, 0.452);
+      border-bottom-left-radius: 27px; 
+      padding: 0 5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.226);
+      .btn{
+         color: rgba(231, 194, 27, 0.993);
+         height: 35px;
+         width: 35px;
+         cursor: pointer;
+         position: relative;
+         &:active {
+            background-color: rgba(255, 255, 255, 0.425);
+            border-radius: 50%;
+         }
+         &:hover{
+            color: rgb(255, 255, 255);
+         }
+      }
+   }
+}
+.logo_content{
+   margin-left: 40px;
+      .logo {
+         color: white;
+         display: flex;
+         height: 70px;
+         width: 100%;
+         align-items: center;
+         opacity: 1;
+         pointer-events: none;
+         transition: all 0.5s ease;
+         }
+         .logo_name{
+            font-size: 20px;
+            font-weight: 400;
+         }
+         .logo_icon{
+            font-size: 28px;
+            margin-right: 5px;
+         }
+}
