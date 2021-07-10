@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const singUpTemplateCopy = require('../models/SingUpModels')
-const validate = require('../middlewares/validate');
 
 router.post('/signup', (request, response) => {
    const singedUpUser = new singUpTemplateCopy({
