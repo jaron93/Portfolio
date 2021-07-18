@@ -2,17 +2,22 @@ import React from 'react'
 import styles from './Header.module.scss'
 import { CgCardSpades } from 'react-icons/cg';
 import { BiMenuAltRight } from 'react-icons/bi';
-
-import { useDispatch } from "react-redux";
+import { useTypedSelector } from '../../store/store';
+import { useDispatch, useSelector } from "react-redux";
 import { toggleBar } from '../../store/slices/preferences';
 
-function Header() {
+const Header: React.FC = () => {
+
+   const dispatch = useDispatch();
+
+   const { username } = useTypedSelector(state => state.user.userInfo)
 
    const handleClick = () => {
       dispatch(toggleBar());
+      console.log(username);
+
    }
 
-   const dispatch = useDispatch();
 
 
    return (
@@ -28,7 +33,11 @@ function Header() {
                <div className={styles.logo_name}>Name of Site</div>
             </div>
          </div>
-
+         {!!username &&
+            <div className={styles.welcome}>
+               <span>Welcome, {username}!</span>
+            </div>
+         }
       </header>
    )
 }

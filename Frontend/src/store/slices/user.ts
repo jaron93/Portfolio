@@ -1,13 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance } from '../../services/api'
-import { setAuthTokens, isLoggedIn } from 'axios-jwt'
+import { setAuthTokens } from 'axios-jwt'
 
-import { PURGE } from "redux-persist";
-import { dispatch } from 'react-hot-toast/dist/core/store';
-
-if (isLoggedIn()) {
-   // assume we are logged in because we have a refresh token
-}
 
 interface ISignUpFormData {
    username: string;
@@ -66,19 +60,13 @@ export const loginUser = createAsyncThunk(
 
    });
 
+
 export interface UserState {
-   userInfo: {},
+   userInfo: {} | any,
    status: "idle" | "loading" | "succeeded" | "failed",
    error: string | null,
 }
 
-export interface User {
-   id: string,
-   date: string,
-   title: string,
-   content: string,
-   user: string,
-}
 
 const initialState: UserState = {
    userInfo: false && {},

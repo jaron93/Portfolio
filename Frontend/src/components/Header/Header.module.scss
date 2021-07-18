@@ -69,4 +69,13 @@
             font-size: 28px;
             margin-right: 5px;
          }
+   }
+   .welcome{
+      display: flex;
+      margin-left: 40px;
+      align-items: center;
+      span{
+         color: white;
+         font-size: 1.5rem;
+      }
 }

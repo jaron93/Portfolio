@@ -47,9 +47,7 @@ const Signin: React.FC = () => {
 
          <div className={styles.container}>
 
-            <div className={styles.overlay_container}>
-               <img src={loginImg} alt="Login img" className={styles.img} />
-            </div>
+
 
             <div className={styles.form_container}>
 
@@ -66,7 +64,9 @@ const Signin: React.FC = () => {
 
             </div>
 
-
+            <div className={styles.overlay_container}>
+               <img src={loginImg} alt="Login img" className={styles.img} />
+            </div>
 
          </div>
 
