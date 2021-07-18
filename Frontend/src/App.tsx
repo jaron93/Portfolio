@@ -2,16 +2,23 @@ import React from 'react';
 import './styles/global.scss'
 import Sidebar from './components/Sidebar/Sidebar'
 import Header from './components/Header/Header'
-import { useTypedSelector } from './store/store';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
+
+import Signup from './pages/Signup/Signup';
+import Login from './pages/Login/Login';
+import Home from './pages/Home';
 
 import {
    BrowserRouter as Router,
+   Switch,
+   Route
 } from "react-router-dom"
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
 
-   const sidebarOpen = useTypedSelector(state => state.preferences.sidebarOpen);
+   const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
 
    return (
       <Router>
@@ -19,11 +26,14 @@ export default function App() {
             <Header />
             <Sidebar />
             <div className={classNames('main-content', sidebarOpen && 'isActive')}>
-               <div className="text"><p>Home Conten</p></div>
-               <div className="text"><p>Home Conten</p></div>
-               <div className="text"><p>Home Conten</p></div>
-               <div className="text"><p>Home Conten</p></div>
+               <Switch>
+                  <Route exact component={Home} path="/" />
+                  <Route exact component={Login} path="/login" />
+                  <Route exact component={Signup} path="/signup" />
+                  {/*                   <PrivateRoute exact component={Dashboard} path="/" /> */}
+               </Switch>
             </div>
+            <Toaster />
          </>
       </Router >
    );

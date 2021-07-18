@@ -4,6 +4,8 @@ const cors = require('cors');
 
 
 const app = express();
+app.use(cors());
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
@@ -26,7 +28,7 @@ app.use(express.urlencoded({ extended: true })); */
 
 
 
-app.use(cors());
+
 // In case if I need to set up a cors for project url
 /* var corsOptions = {
    origin: "http://localhost:8081"

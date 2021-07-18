@@ -29,8 +29,11 @@
       }
    }
    ul{
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
       padding-bottom: 50px;
-      height: 100%;
+      height: 95%;
       overflow-y: scroll;
       overflow-x: visible;
       width: 200px;
@@ -43,10 +46,9 @@
          position: relative;
          height: 50px;
          width: 50px;
-         margin: 0 5px;
          list-style: none;
          line-height: 50px;
-         margin: 5px 0;
+         margin: 5px 5PPX;
          &:hover{
             .tooltip{
                transition: all 0.5s ease;
@@ -77,9 +79,11 @@
          }
          .link{
             position: relative;
+            display: flex;
             color: #fff;
             display: flex;
             align-items: center;
+            justify-items: center;
             text-decoration: none;
             border-radius: 12px;
             white-space: nowrap;
@@ -89,8 +93,8 @@
                background: #fff;
             }
             .icon{
-               height: 35px;
-               min-width: 35px;
+             height: 30px; 
+               min-width: 30px; 
                border-radius: 12px;
                margin-left: 7px;
                &.icon1{
