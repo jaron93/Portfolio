@@ -4,6 +4,9 @@ $primary-text: #121212;
 $secondary-text: #dbdbdb;
 $body-bg: rgb(80, 104, 131);
 
+
+
+
 // Mixins
 @mixin d-flex {
     display: flex;
@@ -41,4 +44,34 @@ $body-bg: rgb(80, 104, 131);
 
 @mixin drop-shadow {
     box-shadow: 2px 4px 12px 1px rgba(142, 128, 239, 0.3);
+}
+
+/*********************
+BREAKPOINTS
+*********************/
+
+$breakpoints: (
+  xs: 360px, // $xs: 360px;
+  sm: 576px, // $sm: 576px;
+  md: 768px, // $md: 768px;
+  lg: 992px, // $lg: 992px;
+  xl: 1024px, // $xl: 1024px;
+  xxl: 1280px, // $xl: 1280px;
+  1440: 1440px, // $1440: 1440px;
+  1600: 1600px, // $1600: 1600px;
+  1920: 1920px, // $1920: 1920px;
+);
+
+@mixin min($key) {
+   $size: map-get($breakpoints, $key);
+   @media only screen and (min-width: $size) {
+       @content;
+   }
+}
+
+@mixin max($key) {
+   $size: map-get($breakpoints, $key);
+   @media only screen and (max-width: $size) {
+       @content;
+   }
 }

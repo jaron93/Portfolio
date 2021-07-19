@@ -8,7 +8,9 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { HiUserCircle } from 'react-icons/hi'
-import loginImg from "../../assets/login.jpg"
+import FormInput from '../../components/FormInput/FormInput';
+import { FiLock } from 'react-icons/fi';
+import { FaUserAlt } from 'react-icons/fa';
 
 type ILoginFormData = {
    username: string;
@@ -47,26 +49,31 @@ const Signin: React.FC = () => {
 
          <div className={styles.container}>
 
-
-
-            <div className={styles.form_container}>
-
-               <form onSubmit={handleSubmit(onSubmit)}>
-                  <h1>Sign in</h1>
-                  <HiUserCircle className={styles.icon} />
-                  <label>username</label>
-                  <input {...register("username")} />
-                  <label>Password</label>
-                  <input {...register("password")} />
-
-                  <input type="submit" />
-               </form>
-
-            </div>
-
-            <div className={styles.overlay_container}>
-               <img src={loginImg} alt="Login img" className={styles.img} />
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+               <h1>Sign in</h1>
+               <HiUserCircle className={styles.icon} />
+               <label>Username</label>
+               <FormInput
+                  id="username"
+                  name="username"
+                  type="username"
+                  register={register}
+                  icon={FaUserAlt}
+                  placeholder="example"
+               />
+               <br />
+               <label>Password</label>
+               <FormInput
+                  id="password"
+                  name="password"
+                  type="password"
+                  register={register}
+                  icon={FiLock}
+                  placeholder="******"
+               />
+               <br />
+               <input type="submit" />
+            </form>
 
          </div>
 
