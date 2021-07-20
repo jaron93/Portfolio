@@ -7,56 +7,98 @@ import { useHistory } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
+import FormInput from '../../components/FormInput/FormInput';
 
-type ISignUpFormData = {
+import { HiOutlineMail } from 'react-icons/hi'
+import { FiLock } from 'react-icons/fi';
+import { FaUserAlt, FaFileSignature } from 'react-icons/fa';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
+interface ISignupFormData {
    username: string;
    email: string;
    password: string;
 }
 
 const Signup: React.FC = () => {
+
+   const validationSchema = Yup.object().shape({
+      username: Yup.string()
+         .required('Username is required'),
+      email: Yup.string()
+         .required('E-mail is required'),
+      password: Yup.string()
+         .required('Password is required'),
+   });
+   const formOptions = { resolver: yupResolver(validationSchema) };
+
    const dispatch = useDispatch()
-   const { register, handleSubmit } = useForm()
+   const { register, handleSubmit, formState: { errors } } = useForm(formOptions)
    const history = useHistory();
 
-   const isSuccess = useSelector(state => state.user)
-   const isError = useSelector(state => state.user)
-   const isFailed = useSelector(state => state.user)
+   const { status, error } = useSelector(state => state.user)
 
-   const onSubmit: SubmitHandler<ISignUpFormData> = data => {
+   const notify = () => toast;
+
+   const onSubmit: SubmitHandler<ISignupFormData> = data => {
       dispatch(signupUser(data));
    }
 
-   /* 
-      useEffect(() => {
-         if (isSuccess) {
-            dispatch(clearState());
-            history.push('/');
-         }
-         if (isError) {
-            toast.error(errorMessage);
-            dispatch(clearState());
-         }
-      }, [isSuccess, isError, dispatch, history, errorMessage]); */
+   useEffect(() => {
+      if (status === "failed") {
+         toast.error(error);
+         notify();
+         dispatch(clearState())
+      }
+      if (status === "succeeded") {
+         toast.success("Account Created Successfully!");
+         notify();
+         history.push('/signin')
+         dispatch(clearState())
+      }
+   }, [status, error, history, dispatch]);
 
 
    return (
       <>
-
          <div className={styles.container}>
+
             <header>
-               <h1>
-                  Sign Up
-               </h1>
+               <h1>Sign up</h1>
             </header>
+
+            <FaFileSignature size={80} style={{ fill: 'white', margin: "0 auto" }} />
+
             <form onSubmit={handleSubmit(onSubmit)}>
                <label>Username</label>
-               <input {...register("username")} />
+               <FormInput
+                  name="username"
+                  type="username"
+                  register={register}
+                  icon={FaUserAlt}
+                  placeholder="example"
+                  errors={errors?.username?.message}
+               />
                <label>E-mail</label>
-               <input {...register("email")} />
+               <FormInput
+                  name="email"
+                  type="email"
+                  register={register}
+                  icon={HiOutlineMail}
+                  placeholder="example@gmail.com"
+                  errors={errors?.email?.message}
+               />
                <label>Password</label>
-               <input {...register("password")} />
-
+               <FormInput
+                  name="password"
+                  type="password"
+                  register={register}
+                  icon={FiLock}
+                  placeholder="******"
+                  errors={errors?.password?.message}
+               />
                <input type="submit" />
             </form>
          </div>

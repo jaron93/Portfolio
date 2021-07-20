@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import styles from './FormInput.module.scss'
 import classNames from 'classnames';
 import { IconBaseProps } from 'react-icons';
@@ -18,9 +18,6 @@ let cn = classNames;
 
 const FormInput: React.FC<InputProps> = ({ register, name, errors, icon: Icon, ...inputProps }) => {
 
-   /*    const { errors
-      } = useFormContext();
-    */
    const inputRef = useRef<HTMLInputElement>(null);
    const [isFocused, setIsFocused] = useState(false);
    const [isFilled, setIsFilled] = useState(false);

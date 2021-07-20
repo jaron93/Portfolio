@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import Signup from './pages/Signup/Signup';
-import Login from './pages/Login/Login';
+import Signin from './pages/Signin/Signin';
 import Home from './pages/Home';
 
 import {
@@ -28,7 +28,7 @@ export default function App() {
             <div className={classNames('main-content', sidebarOpen && 'isActive')}>
                <Switch>
                   <Route exact component={Home} path="/" />
-                  <Route exact component={Login} path="/login" />
+                  <Route exact component={Signin} path="/signin" />
                   <Route exact component={Signup} path="/signup" />
                   {/*                   <PrivateRoute exact component={Dashboard} path="/" /> */}
                </Switch>

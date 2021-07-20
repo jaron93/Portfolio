@@ -55,11 +55,11 @@ const Sidebar: React.FC = () => {
                   </li>
                   {!userInfo &&
                      <li>
-                        <NavLink to="/login" className={styles.link}>
+                        <NavLink to="/signin" className={styles.link}>
                            <CgMenuGridO /* className={styles.icon2} */ />
-                           <span className={cn(styles.links_name, isActive)}>Login</span>
+                           <span className={cn(styles.links_name, isActive)}>Signin</span>
                         </NavLink>
-                        <span className={cn(styles.tooltip, isActive)}>Login</span>
+                        <span className={cn(styles.tooltip, isActive)}>Signin</span>
                      </li>
                   }
                   {!userInfo &&

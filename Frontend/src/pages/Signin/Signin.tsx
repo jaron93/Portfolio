@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
-import styles from "./Login.module.scss"
+import styles from "./Signin.module.scss"
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { loginUser, clearState } from '../../store/slices/user';
+import { signinUser, clearState } from '../../store/slices/user';
 import { useHistory } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import { FaUserAlt } from 'react-icons/fa';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
-interface ILoginFormData {
+interface ISigninFormData {
    username: string;
    password: string;
 }
@@ -39,8 +39,8 @@ const Signin: React.FC = () => {
 
    const notify = () => toast;
 
-   const onSubmit: SubmitHandler<ILoginFormData> = data => {
-      dispatch(loginUser(data));
+   const onSubmit: SubmitHandler<ISigninFormData> = data => {
+      dispatch(signinUser(data));
    }
 
 

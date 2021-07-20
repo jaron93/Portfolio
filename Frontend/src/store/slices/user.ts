@@ -3,28 +3,28 @@ import { axiosInstance } from '../../services/api'
 import { setAuthTokens } from 'axios-jwt'
 
 
-interface ISignUpFormData {
+interface ISignupFormData {
    username: string;
    email: string;
    password: string;
 }
 
-interface ILoginFormData {
+interface ISigninFormData {
    username: string;
    password: string;
 }
 
 
 export const signupUser = createAsyncThunk(
-   'users/signupUser',
-   async ({ username, email, password }: ISignUpFormData, thunkAPI) => {
+   'users/signup',
+   async ({ username, email, password }: ISignupFormData, thunkAPI) => {
       try {
          const response = await axiosInstance.post('/api/auth/signup', { username, email, password })
 
-         let data = await response;
-         console.log('data', data);
+         const data = await response.data;
+
          if (response.status === 200) {
-            return { ...data, username: username, email: email };
+            return { ...data };
          } else {
             return thunkAPI.rejectWithValue(data);
          }
@@ -32,12 +32,12 @@ export const signupUser = createAsyncThunk(
          console.log('Error', e.response.data);
          return thunkAPI.rejectWithValue(e.response.data);
       }
-   }
-);
 
-export const loginUser = createAsyncThunk(
-   'users/login',
-   async ({ username, password }: ILoginFormData, thunkAPI) => {
+   });
+
+export const signinUser = createAsyncThunk(
+   'users/signin',
+   async ({ username, password }: ISigninFormData, thunkAPI) => {
       try {
          const response = await axiosInstance.post('/api/auth/signin', { username, password })
 
@@ -84,22 +84,37 @@ export const userSlice = createSlice({
    },
    extraReducers: (builder) => {
       builder
-         .addCase(loginUser.pending, (state) => {
+         .addCase(signupUser.pending, (state) => {
             state.status = "loading";
          })
-         .addCase(loginUser.fulfilled, (state, action) => {
+         .addCase(signupUser.fulfilled, (state) => {
             state.status = "succeeded";
-            state.userInfo = action.payload
             state.error = null
          })
-         .addCase(loginUser.rejected, (state, action: any) => {
+         .addCase(signupUser.rejected, (state, action: any) => {
             state.status = "failed";
             if (action.payload) {
                state.error = action.payload.message;
             } else {
                state.error = "Server is currently unavaible."
             }
-         });
+         })
+         .addCase(signinUser.pending, (state) => {
+            state.status = "loading";
+         })
+         .addCase(signinUser.fulfilled, (state, action) => {
+            state.status = "succeeded";
+            state.userInfo = action.payload
+            state.error = null
+         })
+         .addCase(signinUser.rejected, (state, action: any) => {
+            state.status = "failed";
+            if (action.payload) {
+               state.error = action.payload.message;
+            } else {
+               state.error = "Server is currently unavaible."
+            }
+         })
    }
 });
 

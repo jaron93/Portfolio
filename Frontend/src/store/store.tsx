@@ -1,5 +1,4 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { combineReducers } from 'redux';
 
 import {
@@ -47,10 +46,6 @@ export type RootState = ReturnType<typeof store.getState>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
 
-const useTypedSelector: TypedUseSelectorHook<
-   ReturnType<typeof persistedReducer>
-> = useSelector;
-
-export { store, persistor, useTypedSelector };
+export { store, persistor };
 
 export default persistedReducer;

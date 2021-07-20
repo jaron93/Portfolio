@@ -2,7 +2,6 @@ import React from 'react'
 import styles from './Header.module.scss'
 import { CgCardSpades } from 'react-icons/cg';
 import { BiMenuAltRight } from 'react-icons/bi';
-import { useTypedSelector } from '../../store/store';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleBar } from '../../store/slices/preferences';
 
@@ -10,7 +9,7 @@ const Header: React.FC = () => {
 
    const dispatch = useDispatch();
 
-   const { username } = useTypedSelector(state => state.user.userInfo)
+   const { username } = useSelector(state => state.user.userInfo)
 
    const handleClick = () => {
       dispatch(toggleBar());
