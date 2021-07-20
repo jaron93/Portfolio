@@ -1,26 +1,29 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './FormInput.module.scss'
 import classNames from 'classnames';
-
-
 import { IconBaseProps } from 'react-icons';
+import { FiAlertCircle } from 'react-icons/fi';
+
 
 type InputProps = {
-   id: string,
    register: any,
    type: string,
    name: string,
    placeholder: string,
+   errors: object,
    icon?: React.ComponentType<IconBaseProps>;
 }
 
 let cn = classNames;
 
-const FormInput: React.FC<InputProps> = ({ register, name, icon: Icon, ...inputProps }) => {
+const FormInput: React.FC<InputProps> = ({ register, name, errors, icon: Icon, ...inputProps }) => {
 
-
+   /*    const { errors
+      } = useFormContext();
+    */
    const inputRef = useRef<HTMLInputElement>(null);
    const [isFocused, setIsFocused] = useState(false);
+   const [isFilled, setIsFilled] = useState(false);
 
    const handleInputFocus = useCallback(() => {
       setIsFocused(true);
@@ -29,6 +32,8 @@ const FormInput: React.FC<InputProps> = ({ register, name, icon: Icon, ...inputP
    const handleInputBlur = useCallback(() => {
       setIsFocused(false);
 
+      setIsFilled(!!inputRef.current?.value);
+
    }, []);
 
    const handleContainerFocus = useCallback(() => {
@@ -36,7 +41,12 @@ const FormInput: React.FC<InputProps> = ({ register, name, icon: Icon, ...inputP
    }, []);
 
    return (
-      <div className={cn(styles.container, isFocused && styles['isFocused'])}
+      <div className={cn(
+         styles.container,
+         isFocused && styles['isFocused'],
+         isFilled && styles['isFilled'],
+         errors && styles['isErrors']
+      )}
          onClick={handleContainerFocus}
       >
 
@@ -47,8 +57,23 @@ const FormInput: React.FC<InputProps> = ({ register, name, icon: Icon, ...inputP
             onBlur={handleInputBlur}
             ref={inputRef}
             {...inputProps}
+            aria-invalid={errors ? true : false}
          />
+         {errors && (
+            <div className={styles.tooltip}>
+               <span>{errors}</span>
+               <FiAlertCircle
+                  color="#c53030"
+                  size={20}
+                  style={{ cursor: 'help' }}
+               />
+
+            </div>
+
+         )}
       </div>
+
+
    )
 }
 

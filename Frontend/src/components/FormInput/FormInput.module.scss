@@ -13,6 +13,12 @@
    &.isFocused {
       border: 2px solid blueviolet;
    }
+   &.isErrors {
+      border: 2px solid rgb(175, 11, 11);
+   }
+   &.isFilled {
+      border: 2px solid rgb(20, 185, 48);
+   }
    label {
       flex: 0;
    }
@@ -24,3 +30,41 @@
       margin-left: 10px;
    }
 }
+
+.tooltip {
+   position:relative;
+   &:hover span{
+         opacity: 1;
+         visibility: visible;
+         z-index: 100;
+         overflow: visible !important;
+   }
+   span {
+      min-width: 160px;
+      background: #654d6773;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #a592fd;
+      opacity: 0;
+      transition: opacity 0.4s;
+      visibility: hidden;
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 15px);
+      transform: translateX(-50%);
+      color: rgb(163, 156, 143);
+      text-align: center;
+      overflow: visible !important;
+      &::before {
+         content: '';
+         border-style: solid;
+         border-color: #a592fd transparent;
+         border-width: 6px 6px 0 6px;
+         top: 100%;
+         position: absolute;
+         left: 50%;
+         transform: translateX(-50%);
+       }
+   }
+}
+
