@@ -14,27 +14,28 @@ import {
    Switch,
    Route
 } from "react-router-dom"
-import { Toaster } from 'react-hot-toast';
+import { ToastProvider } from 'react-toast-notifications';
 
 export default function App() {
 
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
 
    return (
-      <Router>
-         <>
-            <Header />
-            <Sidebar />
-            <div className={classNames('main-content', sidebarOpen && 'isActive')}>
-               <Switch>
-                  <Route exact component={Home} path="/" />
-                  <Route exact component={Signin} path="/signin" />
-                  <Route exact component={Signup} path="/signup" />
-                  {/*                   <PrivateRoute exact component={Dashboard} path="/" /> */}
-               </Switch>
-            </div>
-            <Toaster />
-         </>
-      </Router >
+      <ToastProvider>
+         <Router>
+            <>
+               <Header />
+               <Sidebar />
+               <div className={classNames('main-content', sidebarOpen && 'isActive')}>
+                  <Switch>
+                     <Route exact component={Home} path="/" />
+                     <Route exact component={Signin} path="/signin" />
+                     <Route exact component={Signup} path="/signup" />
+                     {/*                   <PrivateRoute exact component={Dashboard} path="/" /> */}
+                  </Switch>
+               </div>
+            </>
+         </Router >
+      </ToastProvider>
    );
 }

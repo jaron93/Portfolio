@@ -4,7 +4,7 @@ import styles from "./Signin.module.scss"
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { signinUser, clearState } from '../../store/slices/user';
 import { useHistory } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { useToasts } from 'react-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from '../../components/FormInput/FormInput';
@@ -37,7 +37,7 @@ const Signin: React.FC = () => {
 
    const { status, error } = useSelector(state => state.user)
 
-   const notify = () => toast;
+   const { addToast } = useToasts();
 
    const onSubmit: SubmitHandler<ISigninFormData> = data => {
       dispatch(signinUser(data));
@@ -46,16 +46,14 @@ const Signin: React.FC = () => {
 
    useEffect(() => {
       if (status === "failed") {
-         toast.error(error);
-         notify();
+         addToast(error, { appearance: 'error', autoDismiss: true });
          dispatch(clearState())
       }
       if (status === "succeeded") {
-         toast.success("You are successfully logged in");
-         notify();
+         addToast("You're logged in", { appearance: 'success', autoDismiss: true });
          history.push('/')
       }
-   }, [status, error, history, dispatch]);
+   }, [status, error, history, dispatch, addToast]);
 
 
    return (

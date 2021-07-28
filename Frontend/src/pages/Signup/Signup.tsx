@@ -4,10 +4,11 @@ import styles from "./Signup.module.scss"
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { signupUser, clearState } from '../../store/slices/user';
 import { useHistory } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { useToasts } from 'react-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from '../../components/FormInput/FormInput';
+import Button from '../../components/Button/Button'
 
 import { HiOutlineMail } from 'react-icons/hi'
 import { FiLock } from 'react-icons/fi';
@@ -40,7 +41,7 @@ const Signup: React.FC = () => {
 
    const { status, error } = useSelector(state => state.user)
 
-   const notify = () => toast;
+   const { addToast } = useToasts();
 
    const onSubmit: SubmitHandler<ISignupFormData> = data => {
       dispatch(signupUser(data));
@@ -48,17 +49,15 @@ const Signup: React.FC = () => {
 
    useEffect(() => {
       if (status === "failed") {
-         toast.error(error);
-         notify();
+         addToast(error, { appearance: 'error', autoDismiss: true });
          dispatch(clearState())
       }
       if (status === "succeeded") {
-         toast.success("Account Created Successfully!");
-         notify();
+         addToast('Account Created Successfully!', { appearance: 'success', autoDismiss: true });
          history.push('/signin')
          dispatch(clearState())
       }
-   }, [status, error, history, dispatch]);
+   }, [status, error, history, dispatch, addToast]);
 
 
    return (
@@ -66,7 +65,7 @@ const Signup: React.FC = () => {
          <div className={styles.container}>
 
             <header>
-               <h1>Sign up</h1>
+               <h1>Create Account</h1>
             </header>
 
             <FaFileSignature size={80} style={{ fill: 'white', margin: "0 auto" }} />
@@ -99,7 +98,7 @@ const Signup: React.FC = () => {
                   placeholder="******"
                   errors={errors?.password?.message}
                />
-               <input type="submit" />
+               <Button color="green">Create an account</Button>
             </form>
          </div>
 
