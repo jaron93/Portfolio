@@ -7,7 +7,7 @@ import { signinUser, clearState } from '../../store/slices/user';
 import FormButton from '../../components/FormButton/FormButton';
 import FormInput from '../../components/FormInput/FormInput';
 
-import { useToasts } from 'react-toast-notifications';
+import { toast } from 'react-toastify';
 
 import styles from "./Signin.module.scss"
 
@@ -35,7 +35,7 @@ const Signin: React.FC = () => {
 
    const dispatch = useDispatch()
    const history = useHistory();
-   const { addToast } = useToasts();
+
 
    const { register, handleSubmit, formState: { errors } } = useForm({
       mode: 'all',
@@ -47,20 +47,21 @@ const Signin: React.FC = () => {
 
    const { status, error } = useSelector(state => state.user)
 
+
    const onSubmit: SubmitHandler<ISigninFormData> = data => {
       dispatch(signinUser(data));
    }
 
    useEffect(() => {
       if (status === "failed") {
-         addToast(error, { appearance: 'error', autoDismiss: true });
+         toast.error('😥 ' + error);
          dispatch(clearState())
       }
       if (status === "succeeded") {
-         addToast("You're logged in", { appearance: 'success', autoDismiss: true });
+         toast.success("🤑 You're logged in!");
          history.push('/')
       }
-   }, [status, error, history, dispatch, addToast]);
+   }, [status, error, history, dispatch]);
 
    return (
       <>

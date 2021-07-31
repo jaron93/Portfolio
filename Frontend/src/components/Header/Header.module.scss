@@ -5,7 +5,7 @@
    display: flex;
    top: 0;
    max-height: 65px;
-   width: 100%;
+   width: 100vw;
    background-image: url('../../assets/bg.jpg');
    background-size: cover;
    background-position: center center;
@@ -13,53 +13,34 @@
    background-attachment: fixed;
    background-color: rgb(0, 0, 0);
    z-index: 999;
-   overflow: hidden;
    &:before {
       position: absolute;
       content: "";
-      background: rgba(0, 0, 0, 0.377);
+      background-color: rgba(21, 22, 26, 0.450);
       top: 0;
       height: 65px;
       width: 100%;
-   }
-   &:after {
-   position: absolute;
-   content: "";
-   background: rgba(255, 255, 255, 0.226);
-   
-   bottom: 20px;
-   left: 20%;
-   right: 20%;
-   height: 1px;
-   width: 60%;
    }
    .menu_content{
       justify-content: center;
       width: 78px;
       display: flex;
       text-align: center;
-      border-right: 1px solid rgba(255, 255, 255, 0.226);
+      border-right: 1px solid rgba(255, 255, 255, 0.400);
       align-items: center;
-      background-color: rgba(24, 20, 20, 0.452);
-      border-bottom-left-radius: 27px; 
       padding: 0 5px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.226);
       .btn{
-         color: rgba(231, 194, 27, 0.993);
+         color: rgb(76, 110, 148);
          height: 35px;
          width: 35px;
          cursor: pointer;
          position: relative;
-         &:active {
-            background-color: rgba(255, 255, 255, 0.425);
-            border-radius: 50%;
-         }
          &:hover{
             color: rgb(255, 255, 255);
          }
       }
    }
-}
+
 .logo_content{
    margin-left: 40px;
       .logo {
@@ -89,4 +70,5 @@
          color: white;
          font-size: 1.5rem;
       }
+}
 }

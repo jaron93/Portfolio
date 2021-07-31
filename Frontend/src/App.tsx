@@ -14,27 +14,46 @@ import {
    Switch,
    Route,
 } from "react-router-dom"
-import { ToastProvider } from 'react-toast-notifications';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+/* import { ToastProvider } from 'react-toast-notifications'; */
 
 export default function App() {
 
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
    return (
-      <ToastProvider>
+      <>
+
          <Router>
-            <>
-               <Header />
-               <Sidebar />
-               <div className={classNames('main-content', sidebarOpen && 'isActive')}>
-                  <Switch>
-                     <Route exact component={Home} path="/" />
-                     <Route exact component={Signin} path="/signin" />
-                     <Route exact component={Signup} path="/signup" />
-                     {/*                   <PrivateRoute exact component={Dashboard} path="/" /> */}
-                  </Switch>
-               </div>
-            </>
+
+            <Header />
+            <Sidebar />
+
+            <div className={classNames('main-content', sidebarOpen && 'isActive')}>
+               <Switch>
+                  <Route exact component={Home} path="/" />
+
+                  <Route exact component={Signin} path="/signin" />
+                  <Route exact component={Signup} path="/signup" />
+                  {/*                   <PrivateRoute exact component={Dashboard} path="/" /> */}
+               </Switch>
+            </div>
+
          </Router >
-      </ToastProvider>
+         <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+         />
+
+      </>
    );
 }

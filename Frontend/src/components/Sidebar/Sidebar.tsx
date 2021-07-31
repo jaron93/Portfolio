@@ -4,10 +4,11 @@ import styles from './Sidebar.module.scss'
 import { Link, NavLink } from 'react-router-dom'
 import classNames from 'classnames';
 import { IconContext } from "react-icons";
-import { CgMenuGridO } from 'react-icons/cg';
+
+import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdPower } from 'react-icons/io';
-import { FiUserPlus } from 'react-icons/fi';
-import { TiContacts } from 'react-icons/ti';
+import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
+import { BiMessageDots } from 'react-icons/bi';
 
 import { clearAuthTokens } from 'axios-jwt'
 import { clearState } from '../../store/slices/user';
@@ -51,10 +52,10 @@ const Sidebar: React.FC = () => {
                         className={styles.link}
                         onClick={() => { handleNavigateToPage() }}
                      >
-                        <CgMenuGridO className={styles.icon1} />
+                        <AiOutlineHome className={styles.icon1} />
                         <span className={cn(styles.links_name, isActive)}>Home Page</span>
                      </NavLink>
-                     <span className={cn(styles.tooltip, isActive)}>Dashboard</span>
+                     <span className={cn(styles.tooltip, isActive)}>Home Page</span>
                   </li>
                   {!userInfo &&
                      <li>
@@ -63,10 +64,10 @@ const Sidebar: React.FC = () => {
                            className={styles.link}
                            onClick={() => { handleNavigateToPage() }}
                         >
-                           <CgMenuGridO /* className={styles.icon2} */ />
-                           <span className={cn(styles.links_name, isActive)}>Signin</span>
+                           <FiLogIn /* className={styles.icon2} */ />
+                           <span className={cn(styles.links_name, isActive)}>Login</span>
                         </NavLink>
-                        <span className={cn(styles.tooltip, isActive)}>Signin</span>
+                        <span className={cn(styles.tooltip, isActive)}>Login</span>
                      </li>
                   }
                   {!userInfo &&
@@ -77,9 +78,9 @@ const Sidebar: React.FC = () => {
                            onClick={() => { handleNavigateToPage() }}
                         >
                            <FiUserPlus /* className={styles.icon3} */ />
-                           <span className={cn(styles.links_name, isActive)}>Signup</span>
+                           <span className={cn(styles.links_name, isActive)}>Register</span>
                         </NavLink>
-                        <span className={cn(styles.tooltip, isActive)}>Signup</span>
+                        <span className={cn(styles.tooltip, isActive)}>Register</span>
                      </li>
                   }
 
@@ -89,10 +90,10 @@ const Sidebar: React.FC = () => {
                         className={styles.link}
                         onClick={() => { handleNavigateToPage() }}
                      >
-                        <CgMenuGridO /* className={styles.icon4} */ />
-                        <span className={cn(styles.links_name, isActive)}>Dashboard</span>
+                        <FiHelpCircle />
+                        <span className={cn(styles.links_name, isActive)}>Help</span>
                      </Link>
-                     <span className={cn(styles.tooltip, isActive)}>Dashboard</span>
+                     <span className={cn(styles.tooltip, isActive)}>Help</span>
                   </li>
 
                   <li>
@@ -101,7 +102,7 @@ const Sidebar: React.FC = () => {
                         className={styles.link}
                         onClick={() => { handleNavigateToPage() }}
                      >
-                        <TiContacts /* className={styles.icon5} */ />
+                        <BiMessageDots />
                         <span className={cn(styles.links_name, isActive)}>Contact</span>
                      </Link>
                      <span className={cn(styles.tooltip, isActive)}>Contact</span>

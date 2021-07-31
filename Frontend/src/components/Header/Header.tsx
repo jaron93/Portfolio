@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './Header.module.scss'
 import { CgCardSpades } from 'react-icons/cg';
-import { BiMenuAltRight } from 'react-icons/bi';
+import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleBar } from '../../store/slices/preferences';
 
@@ -13,11 +13,7 @@ const Header: React.FC = () => {
 
    const handleClick = () => {
       dispatch(toggleBar());
-      console.log(username);
-
    }
-
-
 
    return (
 
@@ -25,7 +21,7 @@ const Header: React.FC = () => {
 
       <header className={styles.header}>
          <div className={styles.menu_content}>
-            <BiMenuAltRight className={styles.btn} onClick={handleClick} />
+            <AiOutlineMenuUnfold className={styles.btn} onClick={handleClick} />
          </div>
 
          <div className={styles.logo_content}>

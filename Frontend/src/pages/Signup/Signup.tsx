@@ -7,7 +7,7 @@ import { signupUser, clearState } from '../../store/slices/user';
 import FormButton from '../../components/FormButton/FormButton'
 import FormInput from '../../components/FormInput/FormInput';
 
-import { useToasts } from 'react-toast-notifications';
+import { toast } from 'react-toastify';
 
 import styles from "./Signup.module.scss"
 
@@ -55,7 +55,7 @@ const Signup: React.FC = () => {
 
    const dispatch = useDispatch()
    const history = useHistory();
-   const { addToast } = useToasts();
+
 
    const { register, handleSubmit, formState: { errors } } = useForm({
       mode: 'all',
@@ -73,15 +73,17 @@ const Signup: React.FC = () => {
 
    useEffect(() => {
       if (status === "failed") {
-         addToast(error, { appearance: 'error', autoDismiss: true });
+         toast.error('😥 ' + error);
          dispatch(clearState())
       }
       if (status === "succeeded") {
-         addToast('Account Created Successfully!', { appearance: 'success', autoDismiss: true });
+         toast.success("🤑 Account Created Successfully!");
          history.push('/signin')
          dispatch(clearState())
       }
-   }, [status, error, history, dispatch, addToast]);
+   }, [status, error, history, dispatch]);
+
+
 
    return (
       <>
