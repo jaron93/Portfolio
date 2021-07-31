@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import styles from './Sidebar.module.scss'
 import { Link, NavLink } from 'react-router-dom'
 import classNames from 'classnames';
-
-
 import { IconContext } from "react-icons";
 import { CgMenuGridO } from 'react-icons/cg';
 import { IoMdPower } from 'react-icons/io';
@@ -13,8 +11,7 @@ import { TiContacts } from 'react-icons/ti';
 
 import { clearAuthTokens } from 'axios-jwt'
 import { clearState } from '../../store/slices/user';
-
-
+import { hideBar } from '../../store/slices/preferences'
 
 
 let cn = classNames;
@@ -23,7 +20,6 @@ let cn = classNames;
 const Sidebar: React.FC = () => {
 
    const dispatch = useDispatch()
-
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
 
    const isActive = sidebarOpen && styles['isActive'];
@@ -31,6 +27,11 @@ const Sidebar: React.FC = () => {
 
    const { userInfo } = useSelector(state => state.user);
 
+   const handleNavigateToPage = () => {
+      if (window.innerWidth <= 576) {
+         dispatch(hideBar());
+      }
+   }
 
    const handleLogout = () => {
       clearAuthTokens()
@@ -41,13 +42,15 @@ const Sidebar: React.FC = () => {
       <IconContext.Provider value={{ className: styles.icon }}>
 
          <div className={cn(styles.sidebar, isActive)}>
-
             <ul>
                <div>
 
-
                   <li>
-                     <NavLink to="/" className={styles.link}>
+                     <NavLink
+                        to="/"
+                        className={styles.link}
+                        onClick={() => { handleNavigateToPage() }}
+                     >
                         <CgMenuGridO className={styles.icon1} />
                         <span className={cn(styles.links_name, isActive)}>Home Page</span>
                      </NavLink>
@@ -55,7 +58,11 @@ const Sidebar: React.FC = () => {
                   </li>
                   {!userInfo &&
                      <li>
-                        <NavLink to="/signin" className={styles.link}>
+                        <NavLink
+                           to="/signin"
+                           className={styles.link}
+                           onClick={() => { handleNavigateToPage() }}
+                        >
                            <CgMenuGridO /* className={styles.icon2} */ />
                            <span className={cn(styles.links_name, isActive)}>Signin</span>
                         </NavLink>
@@ -64,7 +71,11 @@ const Sidebar: React.FC = () => {
                   }
                   {!userInfo &&
                      <li>
-                        <NavLink to="/signup" className={styles.link}>
+                        <NavLink
+                           to="/signup"
+                           className={styles.link}
+                           onClick={() => { handleNavigateToPage() }}
+                        >
                            <FiUserPlus /* className={styles.icon3} */ />
                            <span className={cn(styles.links_name, isActive)}>Signup</span>
                         </NavLink>
@@ -73,7 +84,11 @@ const Sidebar: React.FC = () => {
                   }
 
                   <li>
-                     <Link to="/" className={styles.link}>
+                     <Link
+                        to="/"
+                        className={styles.link}
+                        onClick={() => { handleNavigateToPage() }}
+                     >
                         <CgMenuGridO /* className={styles.icon4} */ />
                         <span className={cn(styles.links_name, isActive)}>Dashboard</span>
                      </Link>
@@ -81,12 +96,17 @@ const Sidebar: React.FC = () => {
                   </li>
 
                   <li>
-                     <Link to="/" className={styles.link}>
+                     <Link
+                        to="/"
+                        className={styles.link}
+                        onClick={() => { handleNavigateToPage() }}
+                     >
                         <TiContacts /* className={styles.icon5} */ />
                         <span className={cn(styles.links_name, isActive)}>Contact</span>
                      </Link>
                      <span className={cn(styles.tooltip, isActive)}>Contact</span>
                   </li>
+
                </div>
 
                {!!userInfo &&
@@ -98,9 +118,8 @@ const Sidebar: React.FC = () => {
                      <span className={cn(styles.tooltip, isActive)}>Logout</span>
                   </li>
                }
+
             </ul>
-
-
          </div>
 
 

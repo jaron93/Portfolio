@@ -1,4 +1,6 @@
 @import 'variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
+
 
 // Reset
 *{
@@ -6,36 +8,23 @@
    padding: 0px;
    box-sizing: border-box;
    outline: 0px;
+   font-family: 'Roboto', sans-serif;
  }
 
 body {
-   height: 100vh;
-   width: 100vw;
    background-image: url('../assets/bg.jpg');
    background-size: cover;
    background-position: center center;
    background-repeat: no-repeat;
    background-attachment: fixed;
    background-color: rgba(23, 27, 33, 0.795);
-   &::after {
-      content: "";
-      background-color: rgba(23, 27, 33, 0.329);
-      opacity: 1;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      position: absolute;
-      z-index: -1;   
-      height: 100vh;
-      width: 100%;
-   }
-
+   transition-duration: 0.5s;
+   transition-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
+   transition-property: all;
 }
 
 .main-content {
    position: relative;
-   overflow-y: scroll;
    margin-left: 78px;
    width: calc(100% - 78px);
    display: flex;
@@ -43,7 +32,7 @@ body {
    transition-duration: 0.5s;
    transition-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
    transition-property: all;
-   height: calc(100vh - 65px);
+   overflow: hidden;
    @include max(sm) {
       margin-left: 0;
       width: 100%;
@@ -53,7 +42,7 @@ body {
       margin-left: 240px;
       opacity: 1;
       @include max(sm) {
-         opacity: 0;
+         display: none;
       }
    }
    &::-webkit-scrollbar {
@@ -62,3 +51,12 @@ body {
 }
 
 
+.fade-enter {
+   opacity: 0;
+   z-index: 1;
+ }
+ 
+ .fade-enter.fade-enter-active {
+   opacity: 1;
+   transition: opacity 250ms ease-in;
+ }

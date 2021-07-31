@@ -4,13 +4,24 @@
    position: sticky;
    display: flex;
    top: 0;
-   left: 0;
    max-height: 65px;
-   height: 65px;
    width: 100%;
-   background-color: rgba(21, 22, 26, 0.37);
-/*    border-bottom-left-radius: 40px;   */
-/*    border-bottom: 1px solid #8d8d8d; */
+   background-image: url('../../assets/bg.jpg');
+   background-size: cover;
+   background-position: center center;
+   background-repeat: no-repeat;
+   background-attachment: fixed;
+   background-color: rgb(0, 0, 0);
+   z-index: 999;
+   overflow: hidden;
+   &:before {
+      position: absolute;
+      content: "";
+      background: rgba(0, 0, 0, 0.377);
+      top: 0;
+      height: 65px;
+      width: 100%;
+   }
    &:after {
    position: absolute;
    content: "";

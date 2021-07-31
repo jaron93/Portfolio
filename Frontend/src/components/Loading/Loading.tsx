@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
+import './loading.css'
 
 interface ILoadingProps {
    color?: string;
@@ -9,10 +10,11 @@ interface ILoadingProps {
 
 const Loading: React.FC<ILoadingProps> = ({
    color = "white",
-   height = "20%",
-   width = "20%",
+   height = 22,
+   width = 60,
 }) => (
    <ReactLoading
+      className="loading"
       type="bubbles"
       color={color}
       width={width}

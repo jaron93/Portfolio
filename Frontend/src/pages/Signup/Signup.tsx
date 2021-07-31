@@ -3,16 +3,17 @@ import React, { useEffect } from 'react';
 import styles from "./Signup.module.scss"
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { signupUser, clearState } from '../../store/slices/user';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from '../../components/FormInput/FormInput';
-import Button from '../../components/Button/Button'
+import FormButton from '../../components/FormButton/FormButton'
 
 import { HiOutlineMail } from 'react-icons/hi'
 import { FiLock } from 'react-icons/fi';
 import { FaUserAlt, FaFileSignature } from 'react-icons/fa';
+import { SiGnuprivacyguard } from 'react-icons/si'
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -26,17 +27,39 @@ interface ISignupFormData {
 const Signup: React.FC = () => {
 
    const validationSchema = Yup.object().shape({
-      username: Yup.string()
-         .required('Username is required'),
-      email: Yup.string()
-         .required('E-mail is required'),
-      password: Yup.string()
-         .required('Password is required'),
+      username: Yup
+         .string()
+         .label('Username')
+         .required()
+         .min(6)
+         .max(30)
+         .matches(/^[a-zA-Z0-9]*$/, "Only alphabets and numbers are allowed for this field"),
+      email: Yup
+         .string()
+         .label('E-mail')
+         .required()
+         .email(),
+      password: Yup
+         .string()
+         .label('Password')
+         .required()
+         .min(6)
+         .max(30),
+      confirmPassword: Yup
+         .string()
+         .required()
+         .label('Confirm Password')
+         .oneOf([Yup.ref('password'), null], 'Passwords must match'),
    });
-   const formOptions = { resolver: yupResolver(validationSchema) };
 
    const dispatch = useDispatch()
-   const { register, handleSubmit, formState: { errors } } = useForm(formOptions)
+   const { register, handleSubmit, formState: { errors } } = useForm({
+      mode: 'all',
+      reValidateMode: 'onChange',
+      resolver: yupResolver(validationSchema),
+      criteriaMode: "firstError",
+      shouldFocusError: true
+   })
    const history = useHistory();
 
    const { status, error } = useSelector(state => state.user)
@@ -68,9 +91,9 @@ const Signup: React.FC = () => {
                <h1>Create Account</h1>
             </header>
 
-            <FaFileSignature size={80} style={{ fill: 'white', margin: "0 auto" }} />
+            <FaFileSignature size={60} style={{ fill: 'white', margin: "0 auto" }} />
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                <label>Username</label>
                <FormInput
                   name="username"
@@ -98,8 +121,24 @@ const Signup: React.FC = () => {
                   placeholder="******"
                   errors={errors?.password?.message}
                />
-               <Button color="green">Create an account</Button>
+               <label>Confirm Password</label>
+               <FormInput
+                  name="confirmPassword"
+                  type="password"
+                  register={register}
+                  icon={FiLock}
+                  placeholder="******"
+                  errors={errors?.confirmPassword?.message}
+
+               />
+               <FormButton
+                  icon={SiGnuprivacyguard}
+                  loading={status === "loading" ? true : false}
+               >Create an account</FormButton>
             </form>
+            <div className={styles.footer}>
+               <span>Already have an account? </span><Link to="/signin" className={styles.link}>Sign in</Link>
+            </div>
          </div>
 
       </>

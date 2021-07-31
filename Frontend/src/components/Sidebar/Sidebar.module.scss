@@ -59,9 +59,12 @@
          margin: 5px 5PPX;
          &:hover{
             .tooltip{
-               transition: all 0.5s ease;
+               transition: all 0.5s all;
                opacity: 1;
                top: 50%;
+               @include max(sm) {
+                  opacity: 0;
+                }
             }
          }
          .tooltip{

@@ -20,8 +20,10 @@ const Header: React.FC = () => {
 
 
    return (
-      <header className={styles.header}>
 
+
+
+      <header className={styles.header}>
          <div className={styles.menu_content}>
             <BiMenuAltRight className={styles.btn} onClick={handleClick} />
          </div>
@@ -38,6 +40,7 @@ const Header: React.FC = () => {
             </div>
          }
       </header>
+
    )
 }
 

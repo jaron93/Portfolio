@@ -52,6 +52,7 @@ const FormInput: React.FC<InputProps> = ({ register, name, errors, icon: Icon, .
             {...register(name)}
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}
+            /*  onChange={handleInputChange} */
             ref={inputRef}
             {...inputProps}
             aria-invalid={errors ? true : false}

@@ -12,14 +12,13 @@ import Home from './pages/Home';
 import {
    BrowserRouter as Router,
    Switch,
-   Route
+   Route,
 } from "react-router-dom"
 import { ToastProvider } from 'react-toast-notifications';
 
 export default function App() {
 
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
-
    return (
       <ToastProvider>
          <Router>

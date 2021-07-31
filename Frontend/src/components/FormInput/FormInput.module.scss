@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .container { 
    background: rgba(97, 39, 98, 0.411);
    border-radius: 6px;
@@ -41,7 +43,7 @@
    }
    span {
       min-width: 160px;
-      background: #654d6773;
+      background: #6b466efd;
       padding: 8px;
       border-radius: 4px;
       border: 1px solid #a592fd;
@@ -55,6 +57,9 @@
       color: rgb(163, 156, 143);
       text-align: center;
       overflow: visible !important;
+      @include max(sm){
+         transform: translateX(-65%);
+      }
       &::before {
          content: '';
          border-style: solid;
