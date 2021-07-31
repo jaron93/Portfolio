@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signupUser, clearState } from '../../store/slices/user';
+
+import FormButton from '../../components/FormButton/FormButton'
+import FormInput from '../../components/FormInput/FormInput';
+
+import { useToasts } from 'react-toast-notifications';
 
 import styles from "./Signup.module.scss"
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { signupUser, clearState } from '../../store/slices/user';
-import { useHistory, Link } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 
-import FormInput from '../../components/FormInput/FormInput';
-import FormButton from '../../components/FormButton/FormButton'
-
-import { HiOutlineMail } from 'react-icons/hi'
-import { FiLock } from 'react-icons/fi';
 import { FaUserAlt, FaFileSignature } from 'react-icons/fa';
+import { FiLock } from 'react-icons/fi';
+import { HiOutlineMail } from 'react-icons/hi'
 import { SiGnuprivacyguard } from 'react-icons/si'
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface ISignupFormData {
    username: string;
@@ -53,6 +54,9 @@ const Signup: React.FC = () => {
    });
 
    const dispatch = useDispatch()
+   const history = useHistory();
+   const { addToast } = useToasts();
+
    const { register, handleSubmit, formState: { errors } } = useForm({
       mode: 'all',
       reValidateMode: 'onChange',
@@ -60,11 +64,8 @@ const Signup: React.FC = () => {
       criteriaMode: "firstError",
       shouldFocusError: true
    })
-   const history = useHistory();
 
    const { status, error } = useSelector(state => state.user)
-
-   const { addToast } = useToasts();
 
    const onSubmit: SubmitHandler<ISignupFormData> = data => {
       dispatch(signupUser(data));
@@ -82,7 +83,6 @@ const Signup: React.FC = () => {
       }
    }, [status, error, history, dispatch, addToast]);
 
-
    return (
       <>
          <div className={styles.container}>
@@ -94,6 +94,7 @@ const Signup: React.FC = () => {
             <FaFileSignature size={60} style={{ fill: 'white', margin: "0 auto" }} />
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+
                <label>Username</label>
                <FormInput
                   name="username"
@@ -136,9 +137,11 @@ const Signup: React.FC = () => {
                   loading={status === "loading" ? true : false}
                >Create an account</FormButton>
             </form>
+
             <div className={styles.footer}>
                <span>Already have an account? </span><Link to="/signin" className={styles.link}>Sign in</Link>
             </div>
+
          </div>
 
       </>

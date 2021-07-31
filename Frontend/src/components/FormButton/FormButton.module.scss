@@ -1,7 +1,6 @@
 .btn {
    display: flex;
    align-items: center;
-/*    justify-content: space-between; */
    margin: 15px 0;
    background-color: rgba(160, 35, 35, 0.719);
    color: #fff;
@@ -20,7 +19,7 @@
 
    span{
       position: relative;
-      width: 100%;
+      width: 85%;
       left: 0;
       padding: 0.7rem; 
       margin-left: 10%;
