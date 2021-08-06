@@ -1,0 +1,70 @@
+.container {
+   margin: 10px;
+   width: 100%;
+   height: calc(100vh - 85px);
+   border-radius: 10px;
+   display: flex;
+   background-color: rgba(9, 20, 43, 0.76);
+   .menu{
+      flex: 3;
+      .menuInput {
+         width: 75%;
+         padding: 10px 0;
+         background: transparent;
+         border: none;
+         border-bottom: 1px solid gray;
+       }
+   }
+   .box{
+      flex: 6;
+      .boxWrapper {
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+         position: relative;
+         .boxTop {
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 10px;
+         }
+         .boxBottom {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .messageInput {
+               width: 85%;
+               height: 90px;
+               padding: 10px;
+               background-color: rgba(109, 109, 109, 0.144);
+            }
+            button {
+               width: 70px;
+               height: 40px;
+               border: none;
+               border-radius: 5px;
+               cursor: pointer;
+               background-color: teal;
+               color: white;
+            }
+         }
+         .openConversation {
+            position: absolute;
+            top: 10%;
+            font-size: 30px;
+            color: rgb(224, 220, 220);
+            cursor: default;
+          }
+      }
+   }
+   .online{
+      flex: 2.5;
+   }
+   .menuWrapper,
+   .boxWrapper,
+   .onlineWrapper {
+      padding: 20px;
+      height: 100%;
+   }
+}
+ 

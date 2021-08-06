@@ -1,6 +1,5 @@
 @import '../../styles/variables.scss';
 
-
 .sidebar{
    position: fixed;
    top: 65px;
@@ -8,50 +7,47 @@
    height: calc(100% - 65px) !important;
    width: 78px;
    background-color: rgba(21, 22, 26, 0.450);
-   padding: 6px 14px;
+   padding: 0 14px;
    transition-duration: 0.5s;
    transition-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
    transition-property: all;
    border-right: 1px solid rgba(255, 255, 255, 0.200);
    border-top: 1px solid rgba(255, 255, 255, 0.200);
-   z-index: 99;
+   z-index: 999;
    @include max(sm) {
       transform: translate(-100%);
     }
    &.isActive{
       transform: translate(0);
       width: 240px;
-      &::after {
-         content: '';
-         display: block;
-         position: absolute;
-         top: -1px;
-         right: 0;
-         width: 161px;
-
-      }
    }
+
    ul{
+      height: 100%;
+      width: 200px;
       display: flex;
-      justify-content: space-between;
       flex-direction: column;
+      justify-content: space-between;
       padding-bottom: 50px;
-      height: 95%;
       overflow-y: scroll;
       overflow-x: visible;
-      width: 200px;
       position: absolute;
       margin-top: 50px;
       &::-webkit-scrollbar {
          display: none;
      }
+
       li{
          position: relative;
          height: 50px;
          width: 50px;
          list-style: none;
          line-height: 50px;
-         margin: 5px 5PPX;
+         margin: 10px 0;
+         &.active{
+            width: 70px;
+            height: 70px;
+         }
          &:hover{
             .tooltip{
                transition: all 0.5s all;
@@ -61,6 +57,9 @@
                   opacity: 0;
                 }
             }
+         }
+         .active{
+            background-color: rgb(199, 80, 12);
          }
          .tooltip{
             position: absolute;
@@ -83,7 +82,7 @@
                display: none;
             }
          }
-         .link{
+         a, .logout{
             position: relative;
             display: flex;
             color: #fff;
@@ -95,30 +94,15 @@
             white-space: nowrap;
             transition: all 0.4s ease;
             &:hover{
-               color: #11101d;
+               color: rgb(187, 32, 32);
                background: #fff;
             }
             .icon{
-             height: 30px; 
-               min-width: 30px; 
+               min-width: 50px;
+               height: 25px;
                border-radius: 12px;
-               margin-left: 7px;
-               &.icon1{
-                  color: red;
-               }
-               &.icon2{
-                  color: rgb(179, 255, 0);
-               }
-               &.icon3{
-                  color: rgb(17, 0, 255);
-               }
-               &.icon4{
-                  color: rgb(255, 0, 157);
-               }
-               &.icon5{
-                  color: rgb(255, 187, 0);
-               }
             }
+
             .links_name{
                font-size: 18px;
                font-weight: 400;
@@ -135,6 +119,7 @@
          }
       }
    }
+
 
  }
 

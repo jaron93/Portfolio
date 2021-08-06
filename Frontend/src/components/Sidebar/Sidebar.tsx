@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import styles from './Sidebar.module.scss'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import classNames from 'classnames';
 import { IconContext } from "react-icons";
 
@@ -9,9 +9,11 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdPower } from 'react-icons/io';
 import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
 import { BiMessageDots } from 'react-icons/bi';
+import { RiMessengerLine } from 'react-icons/ri';
+
 
 import { clearAuthTokens } from 'axios-jwt'
-import { clearState } from '../../store/slices/user';
+import { clearState } from '../../store/slices/user'
 import { hideBar } from '../../store/slices/preferences'
 
 
@@ -20,6 +22,7 @@ let cn = classNames;
 
 const Sidebar: React.FC = () => {
 
+   const history = useHistory();
    const dispatch = useDispatch()
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
 
@@ -37,6 +40,8 @@ const Sidebar: React.FC = () => {
    const handleLogout = () => {
       clearAuthTokens()
       dispatch(clearState())
+
+      history.push('/')
    }
 
    return (
@@ -49,22 +54,37 @@ const Sidebar: React.FC = () => {
                   <li>
                      <NavLink
                         to="/"
-                        className={styles.link}
                         onClick={() => { handleNavigateToPage() }}
+                        exact activeClassName={styles.active}
                      >
-                        <AiOutlineHome className={styles.icon1} />
+                        <AiOutlineHome />
                         <span className={cn(styles.links_name, isActive)}>Home Page</span>
                      </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Home Page</span>
                   </li>
+                  {!!userInfo &&
+                     <li>
+                        <NavLink
+                           to="/messenger"
+                           onClick={() => { handleNavigateToPage() }}
+                           activeClassName={styles.active}
+                        >
+                           <RiMessengerLine />
+                           <span className={cn(styles.links_name, isActive)}>Messenger</span>
+                        </NavLink>
+                        <span className={cn(styles.tooltip, isActive)}>Messenger</span>
+                     </li>
+                  }
+
+
                   {!userInfo &&
                      <li>
                         <NavLink
                            to="/signin"
-                           className={styles.link}
                            onClick={() => { handleNavigateToPage() }}
+                           activeClassName={styles.active}
                         >
-                           <FiLogIn /* className={styles.icon2} */ />
+                           <FiLogIn />
                            <span className={cn(styles.links_name, isActive)}>Login</span>
                         </NavLink>
                         <span className={cn(styles.tooltip, isActive)}>Login</span>
@@ -74,10 +94,10 @@ const Sidebar: React.FC = () => {
                      <li>
                         <NavLink
                            to="/signup"
-                           className={styles.link}
                            onClick={() => { handleNavigateToPage() }}
+                           activeClassName={styles.active}
                         >
-                           <FiUserPlus /* className={styles.icon3} */ />
+                           <FiUserPlus />
                            <span className={cn(styles.links_name, isActive)}>Register</span>
                         </NavLink>
                         <span className={cn(styles.tooltip, isActive)}>Register</span>
@@ -85,34 +105,34 @@ const Sidebar: React.FC = () => {
                   }
 
                   <li>
-                     <Link
-                        to="/"
-                        className={styles.link}
+                     <NavLink
+                        to="/help"
                         onClick={() => { handleNavigateToPage() }}
+                        activeClassName={styles.active}
                      >
                         <FiHelpCircle />
                         <span className={cn(styles.links_name, isActive)}>Help</span>
-                     </Link>
+                     </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Help</span>
                   </li>
 
                   <li>
-                     <Link
-                        to="/"
-                        className={styles.link}
+                     <NavLink
+                        to="/contact"
                         onClick={() => { handleNavigateToPage() }}
+                        activeClassName={styles.active}
                      >
                         <BiMessageDots />
                         <span className={cn(styles.links_name, isActive)}>Contact</span>
-                     </Link>
+                     </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Contact</span>
                   </li>
 
                </div>
 
                {!!userInfo &&
-                  < li >
-                     <div className={styles.link} onClick={handleLogout}>
+                  <li>
+                     <div className={styles.logout} onClick={handleLogout}>
                         <IoMdPower />
                         <span className={cn(styles.links_name, isActive)}>Logout</span>
                      </div>

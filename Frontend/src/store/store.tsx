@@ -1,5 +1,5 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { combineReducers } from 'redux';
+import { AnyAction, Reducer, combineReducers } from 'redux';
 
 import {
    persistStore,
@@ -15,17 +15,30 @@ import localStorage from 'redux-persist/lib/storage';
 
 import preferencesReducer from './slices/preferences';
 import userReducer from './slices/user';
+import messengerReducer from './slices/messenger'
 
 const PersistConfig = {
    key: 'root',
    storage: localStorage,
 };
 
-const rootReducer = combineReducers({
+
+const appReducer = combineReducers({
    preferences: preferencesReducer,
    user: userReducer,
+   messenger: messengerReducer,
 });
 
+const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
+   if (action.type === 'user/clearState') {
+
+      // this applies to all keys defined in persistConfig(s)
+      localStorage.removeItem('persist:root')
+
+      state = {} as RootState
+   }
+   return appReducer(state, action)
+}
 const persistedReducer = persistReducer(PersistConfig, rootReducer);
 
 
@@ -46,6 +59,6 @@ export type RootState = ReturnType<typeof store.getState>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
 
-export { store, persistor };
+export { store, persistor, rootReducer };
 
 export default persistedReducer;

@@ -1,11 +1,17 @@
 const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
 const { port } = require('./config/config');
 const cors = require('cors');
+const io = require("socket.io")(http, {
+   cors: {
+      origin: "http://localhost:3000",
+   },
+});
 
 
-const app = express();
+
 app.use(cors());
-
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
@@ -16,25 +22,60 @@ require('./config/initdDB')();
 // routes
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
+require('./routes/conversations.routes')(app);
+require('./routes/messages.routes')(app);
 
 // simple route
 app.get("/", (req, res) => {
    res.json({ message: "Welcome to Jaroslaw api route." });
 });
-/* // parse application/json
-app.use(express.json());
-// parse application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true })); */
 
 
 
+let users = [];
 
-// In case if I need to set up a cors for project url
-/* var corsOptions = {
-   origin: "http://localhost:8081"
- };
- 
- app.use(cors(corsOptions)); */
+const addUser = (userId, socketId) => {
+   !users.some((user) => user.userId === userId) &&
+      users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+   users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+   return users.find((user) => user.userId === userId);
+};
+
+io.on("connection", (socket) => {
+   //when ceonnect
+   /*    console.log("a user connected."); */
+
+   //take userId and socketId from user
+   socket.on("addUser", (userId) => {
+      addUser(userId, socket.id);
+      io.emit("getUsers", users);
+   });
+
+   //send and get message
+   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+      const user = getUser(receiverId);
+      if (!!user) {
+         io.to(user.socketId).emit("getMessage", {
+            senderId,
+            text,
+         });
+      }
+
+   });
+
+   //when disconnect
+   socket.on("disconnect", () => {
+      /*       console.log("a user disconnected!"); */
+      removeUser(socket.id);
+      io.emit("getUsers", users);
+   });
+});
 
 
-app.listen(port, () => console.log('Server running on port: ' + port));
+http.listen(port, () => console.log('Server running on port: ' + port));
