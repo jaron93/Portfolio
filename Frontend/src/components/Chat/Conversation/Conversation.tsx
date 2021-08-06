@@ -17,6 +17,7 @@ function Conversation({ conversation, currentUserId }: any) {
             const res = await axiosInstance("/api/user?userId=" + friendId);
             setUser(res.data);
 
+
          } catch (err) {
             console.log(err);
          }

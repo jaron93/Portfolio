@@ -1,5 +1,5 @@
 import React, { createRef, FC, useEffect, useRef, useState } from 'react'
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Conversation from '../../components/Chat/Conversation/Conversation'
 import Message from '../../components/Chat/Message/Message'
@@ -15,16 +15,18 @@ import { io } from 'socket.io-client';
 
 
 const Messenger: FC = () => {
-   const dispatch = useDispatch()
+
    const scrollRef = createRef<HTMLDivElement>();
    const socket = useRef<any>();
 
+   const [onlineUsers, setOnlineUsers] = useState<any>([]);
    const [messages, setMessages] = useState<any>([]);
    const [conversations, setConversations] = useState([]);
    const [currentChat, setCurrentChat] = useState<any>(null);
    const [newMessage, setNewMessage] = useState("");
    const [arrivalMessage, setArrivalMessage] = useState<any>(null);
 
+   const mountedRef = useRef(true)
 
    /*   const { conversations, messages } = useSelector(state => state.messenger); */
    const { id } = useSelector(state => state.user.userInfo);
@@ -37,48 +39,63 @@ const Messenger: FC = () => {
             sender: data.senderId,
             text: data.text,
             createdAt: Date.now(),
-            _id: Math.floor(Math.random() * 990)
+            _id: Math.floor(Math.random() * 99999)
          });
       });
+      return () => {
+         socket.current.disconnect();
+      }
+
    }, []);
 
    useEffect(() => {
       arrivalMessage &&
          currentChat?.members.includes(arrivalMessage.sender) &&
          setMessages((prev: any) => [...prev, arrivalMessage]);
+      return () => { mountedRef.current = false }
+
    }, [arrivalMessage, currentChat]);
 
    useEffect(() => {
       const getMessages = async () => {
          try {
             const res = await axiosInstance("/api/messages/" + currentChat?._id);
-            /* dispatch(setMessages(res.data)); */
             setMessages(res.data)
          } catch (err) {
             console.log(err);
          }
       };
       getMessages();
-   }, [currentChat, dispatch]);
+      return () => { mountedRef.current = false }
+
+   }, [currentChat]);
 
    useEffect(() => {
       const getConversations = async () => {
          try {
             const res = await axiosInstance("/api/conversation/" + id);
             /* dispatch(setConversations(res.data)); */
+            if (!mountedRef.current) return null;
+
             setConversations(res.data)
          } catch (err) {
             console.log(err);
          }
       };
       getConversations();
-   }, [dispatch, id]);
+      return () => { mountedRef.current = false }
+   }, [id, conversations]);
 
    useEffect(() => {
       socket.current.emit("addUser", id);
       socket.current.on("getUsers", (users: any) => {
+         setOnlineUsers(
+            users.filter((user: any) => user.userId !== id)
+         );
       })
+
    }, [id]);
+
 
    const handleSubmit = async (e: any) => {
       e.preventDefault();
@@ -109,7 +126,6 @@ const Messenger: FC = () => {
             receiverId,
             text: newMessage,
          });
-
       }
 
    }
@@ -166,10 +182,16 @@ const Messenger: FC = () => {
          </div>
          <div className={styles.online}>
             <div className={styles.onlineWrapper}>
-               <Online />
-               <Online />
-               <Online />
-               <Online />
+               {
+                  onlineUsers.map((o: any) => (
+                     <Online
+                        key={o.userId}
+                        onlineUsers={o}
+                        currentUserId={id}
+                        setCurrentChat={setCurrentChat}
+                     />
+                  ))
+               }
             </div>
          </div>
 
