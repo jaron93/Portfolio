@@ -12,10 +12,10 @@ import { io } from 'socket.io-client';
 
 /* import { setConversations, setMessages } from '../../store/slices/messenger'; */
 
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL
 
 
 const Messenger: FC = () => {
-
    const scrollRef = createRef<HTMLDivElement>();
    const socket = useRef<any>();
 
@@ -33,7 +33,7 @@ const Messenger: FC = () => {
 
 
    useEffect(() => {
-      socket.current = io("ws://localhost:8080");
+      socket.current = io(`${SOCKET_URL}`);
       socket.current.on("getMessage", (data: any) => {
          setArrivalMessage({
             sender: data.senderId,

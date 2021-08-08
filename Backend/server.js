@@ -5,11 +5,9 @@ const { port } = require('./config/config');
 const cors = require('cors');
 const io = require("socket.io")(http, {
    cors: {
-      origin: "http://localhost:3000",
+      origin: http,
    },
 });
-
-
 
 app.use(cors());
 
@@ -29,7 +27,6 @@ require('./routes/messages.routes')(app);
 app.get("/", (req, res) => {
    res.json({ message: "Welcome to Jaroslaw api route." });
 });
-
 
 
 let users = [];
