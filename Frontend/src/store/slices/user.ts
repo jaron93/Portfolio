@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { axiosInstance } from '../../services/api'
 import { setAuthTokens } from 'axios-jwt'
 
@@ -63,6 +63,7 @@ export const signinUser = createAsyncThunk(
 
 export interface UserState {
    userInfo: {} | any,
+   onlineUsers: [],
    status: "idle" | "loading" | "succeeded" | "failed",
    error: string | null,
 }
@@ -70,6 +71,7 @@ export interface UserState {
 
 const initialState: UserState = {
    userInfo: false && {},
+   onlineUsers: [],
    status: "idle",
    error: null,
 };
@@ -80,7 +82,10 @@ export const userSlice = createSlice({
    reducers: {
       clearState() {
          return initialState;
-      }
+      },
+      setOnlineUsers: (state, { payload }: PayloadAction<any>) => {
+         state.onlineUsers = payload
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -121,7 +126,7 @@ export const userSlice = createSlice({
 
 export default userSlice.reducer;
 
-export const { clearState } = userSlice.actions;
+export const { clearState, setOnlineUsers } = userSlice.actions;
 
 
 

@@ -22,7 +22,6 @@ const PersistConfig = {
    storage: localStorage,
 };
 
-
 const appReducer = combineReducers({
    preferences: preferencesReducer,
    user: userReducer,

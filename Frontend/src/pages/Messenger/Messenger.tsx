@@ -1,40 +1,44 @@
 import React, { createRef, FC, useEffect, useRef, useState } from 'react'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Conversation from '../../components/Chat/Conversation/Conversation'
 import Message from '../../components/Chat/Message/Message'
 import Online from '../../components/Chat/Online/Online'
-
+import { setOnlineUsers } from '../../store/slices/user'
+import { setConversations } from '../../store/slices/messenger';
 import styles from './Messenger.module.scss'
 
 import { axiosInstance } from '../../services/api';
-import { io } from 'socket.io-client';
-
-/* import { setConversations, setMessages } from '../../store/slices/messenger'; */
-
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL
-
+import { useSocket } from '../../hooks/useSocket';
 
 const Messenger: FC = () => {
    const scrollRef = createRef<HTMLDivElement>();
-   const socket = useRef<any>();
+   const { socket } = useSocket();
+   const dispatch = useDispatch()
 
-   const [onlineUsers, setOnlineUsers] = useState<any>([]);
    const [messages, setMessages] = useState<any>([]);
-   const [conversations, setConversations] = useState([]);
+   /*   const [conversations, setConversations] = useState([]); */
    const [currentChat, setCurrentChat] = useState<any>(null);
    const [newMessage, setNewMessage] = useState("");
    const [arrivalMessage, setArrivalMessage] = useState<any>(null);
 
    const mountedRef = useRef(true)
 
-   /*   const { conversations, messages } = useSelector(state => state.messenger); */
+   const { conversations } = useSelector(state => state.messenger);
+
+   const { onlineUsers } = useSelector(state => state.user);
    const { id } = useSelector(state => state.user.userInfo);
 
 
    useEffect(() => {
-      socket.current = io(`${SOCKET_URL}`);
-      socket.current.on("getMessage", (data: any) => {
+
+      const disconnect = () => {
+         socket.off('getMessage');
+      };
+
+      disconnect();
+
+      socket.on('getMessage', (data: any) => {
          setArrivalMessage({
             sender: data.senderId,
             text: data.text,
@@ -43,10 +47,10 @@ const Messenger: FC = () => {
          });
       });
       return () => {
-         socket.current.disconnect();
-      }
+         disconnect();
+      };
 
-   }, []);
+   }, [socket]);
 
    useEffect(() => {
       arrivalMessage &&
@@ -74,28 +78,34 @@ const Messenger: FC = () => {
       const getConversations = async () => {
          try {
             const res = await axiosInstance("/api/conversation/" + id);
-            /* dispatch(setConversations(res.data)); */
-            if (!mountedRef.current) return null;
 
-            setConversations(res.data)
+            if (!mountedRef.current) return null;
+            dispatch(setConversations(res.data));
+
          } catch (err) {
             console.log(err);
          }
       };
       getConversations();
       return () => { mountedRef.current = false }
-   }, [id, conversations]);
+   }, [id, dispatch]);
 
-   useEffect(() => {
-      socket.current.emit("addUser", id);
-      socket.current.on("getUsers", (users: any) => {
-         setOnlineUsers(
-            users.filter((user: any) => user.userId !== id)
-         );
-      })
-
-   }, [id]);
-
+   /*    useEffect(() => {
+   
+         const disconnect = () => {
+            socket.off('getUsers');
+         };
+   
+         disconnect();
+   
+         socket.emit("addUser", id);
+         socket.on("getUsers", (users: any) => {
+            dispatch(setOnlineUsers(
+               users.filter((user: any) => user.userId !== id)
+            ));
+         })
+   
+      }, [dispatch, id, socket]); */
 
    const handleSubmit = async (e: any) => {
       e.preventDefault();
@@ -121,7 +131,7 @@ const Messenger: FC = () => {
          );
 
 
-         socket.current.emit("sendMessage", {
+         socket.emit("sendMessage", {
             senderId: id,
             receiverId,
             text: newMessage,

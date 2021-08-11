@@ -9,6 +9,9 @@ const io = require("socket.io")(http, {
    },
 });
 
+const jwt = require("jsonwebtoken");
+const config = require("./config/auth.config");
+
 app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +26,7 @@ require('./routes/user.routes')(app);
 require('./routes/conversations.routes')(app);
 require('./routes/messages.routes')(app);
 
-// simple route
+
 app.get("/", (req, res) => {
    res.json({ message: "Welcome to Jaroslaw api route." });
 });
@@ -44,9 +47,27 @@ const getUser = (userId) => {
    return users.find((user) => user.userId === userId);
 };
 
+//Socket.io middelware to validate token
+//Socket.io will only established if user send correct access token key.
+io.use(function (socket, next) {
+   if (socket.handshake.auth && socket.handshake.auth.token) {
+      jwt.verify(socket.handshake.auth.token, config.secret, function (err, decoded) {
+         if (err) return next(new Error('Authentication error'));
+         socket.decoded = decoded;
+         next();
+      });
+   }
+   else {
+      next(new Error('Authentication error'));
+   }
+})
+
+//Start connection betwen client and server
 io.on("connection", (socket) => {
    //when ceonnect
-   /*    console.log("a user connected."); */
+   console.log("a user connected." + socket.id);
+
+   /*    console.log(socket); */
 
    //take userId and socketId from user
    socket.on("addUser", (userId) => {
@@ -61,14 +82,18 @@ io.on("connection", (socket) => {
          io.to(user.socketId).emit("getMessage", {
             senderId,
             text,
-         });
+         }),
+            io.to(user.socketId).emit("getMessage2", {
+               senderId,
+               text,
+            });
       }
 
    });
 
    //when disconnect
    socket.on("disconnect", () => {
-      /*       console.log("a user disconnected!"); */
+      console.log("a user disconnected!");
       removeUser(socket.id);
       io.emit("getUsers", users);
    });

@@ -5,12 +5,13 @@ import Header from './components/Header/Header'
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
+import { SocketProvider } from './hooks/useSocket';
+
 import Signup from './pages/Signup/Signup';
 import Signin from './pages/Signin/Signin';
 import Messenger from './pages/Messenger/Messenger';
 import Help from './pages/Help/Help';
 import Home from './pages/Home';
-
 
 import {
    BrowserRouter as Router,
@@ -24,40 +25,43 @@ import { PrivateRoute } from './routes/PrivateRoute';
 
 /* import { ToastProvider } from 'react-toast-notifications'; */
 
+
 export default function App() {
 
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
+
    return (
       <>
+         <SocketProvider>
+            <Router>
 
-         <Router>
+               <Header />
+               <Sidebar />
 
-            <Header />
-            <Sidebar />
+               <div className={classNames('main-content', sidebarOpen && 'isActive')}>
+                  <Switch>
+                     <Route exact component={Home} path="/" />
+                     <Route exact component={Signin} path="/signin" />
+                     <Route exact component={Signup} path="/signup" />
+                     <Route exact component={Help} path="/help" />
+                     <PrivateRoute exact component={Messenger} path="/messenger" />
+                  </Switch>
+               </div>
 
-            <div className={classNames('main-content', sidebarOpen && 'isActive')}>
-               <Switch>
-                  <Route exact component={Home} path="/" />
-                  <Route exact component={Signin} path="/signin" />
-                  <Route exact component={Signup} path="/signup" />
-                  <Route exact component={Help} path="/help" />
-                  <PrivateRoute exact component={Messenger} path="/messenger" />
-               </Switch>
-            </div>
+            </Router >
 
-         </Router >
-         <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-         />
-
+            <ToastContainer
+               position="top-right"
+               autoClose={5000}
+               hideProgressBar={false}
+               newestOnTop
+               closeOnClick
+               rtl={false}
+               pauseOnFocusLoss
+               draggable
+               pauseOnHover
+            />
+         </SocketProvider>
       </>
    );
 }

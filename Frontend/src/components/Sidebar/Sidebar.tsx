@@ -9,7 +9,7 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdPower } from 'react-icons/io';
 import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
 import { BiMessageDots } from 'react-icons/bi';
-import { RiMessengerLine } from 'react-icons/ri';
+import { RiMessengerFill } from 'react-icons/ri';
 
 
 import { clearAuthTokens } from 'axios-jwt'
@@ -17,11 +17,18 @@ import { clearState } from '../../store/slices/user'
 import { hideBar } from '../../store/slices/preferences'
 
 
+
+
 let cn = classNames;
 
+<svg width="0" height="0">
+   <linearGradient id="blueGradient" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop stopColor="#7a6ded" offset="0%" />
+      <stop stopColor="#591885" offset="100%" />
+   </linearGradient>
+</svg>
 
 const Sidebar: React.FC = () => {
-
    const history = useHistory();
    const dispatch = useDispatch()
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
@@ -69,7 +76,7 @@ const Sidebar: React.FC = () => {
                            onClick={() => { handleNavigateToPage() }}
                            activeClassName={styles.active}
                         >
-                           <RiMessengerLine />
+                           <RiMessengerFill />
                            <span className={cn(styles.links_name, isActive)}>Messenger</span>
                         </NavLink>
                         <span className={cn(styles.tooltip, isActive)}>Messenger</span>
