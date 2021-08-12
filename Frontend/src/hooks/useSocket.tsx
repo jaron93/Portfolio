@@ -5,6 +5,8 @@ import { setOnlineUsers } from '../store/slices/user'
 import { Socket, io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { axiosInstance } from '../services/api';
+import { getAccessToken } from 'axios-jwt';
 
 
 interface SocketContextData {
@@ -15,16 +17,14 @@ interface SocketContextData {
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL
 
 
-
 const SocketContext = createContext<SocketContextData>({} as SocketContextData);
 
 
 const SocketProvider: React.FC = ({ children }) => {
 
-   const token = useSelector(state => state.user.userInfo.accessToken);
    const { id } = useSelector(state => state.user.userInfo);
    const dispatch = useDispatch()
-
+   const token = getAccessToken()
    const [connected, setConnected] = useState(false)
 
    const socket = useMemo(() => {
@@ -34,8 +34,9 @@ const SocketProvider: React.FC = ({ children }) => {
          },
       })
 
-
    }, [token]);
+
+
 
    useEffect(() => {
       const disconnect = () => {
@@ -77,17 +78,17 @@ const SocketProvider: React.FC = ({ children }) => {
    }, [dispatch, id, socket]);
 
 
+
+
    useEffect(() => {
-      /*       const disconnect = () => {
-               socket.off("getMessage");
-            };
-            disconnect(); */
-      socket.on("getMessage2", (data: any) => {
-         toast.warning(':) ' + data.text);
-      });
 
-
+      socket.on("getMessage2", async (data: any) => {
+         await axiosInstance("/api/user?userId=" + data.senderId)
+            .then(res => toast.warning(`${res.data.username}: ` + data.text))
+      })
    }, [socket]);
+
+
 
    return (
 

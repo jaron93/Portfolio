@@ -90,23 +90,6 @@ const Messenger: FC = () => {
       return () => { mountedRef.current = false }
    }, [id, dispatch]);
 
-   /*    useEffect(() => {
-   
-         const disconnect = () => {
-            socket.off('getUsers');
-         };
-   
-         disconnect();
-   
-         socket.emit("addUser", id);
-         socket.on("getUsers", (users: any) => {
-            dispatch(setOnlineUsers(
-               users.filter((user: any) => user.userId !== id)
-            ));
-         })
-   
-      }, [dispatch, id, socket]); */
-
    const handleSubmit = async (e: any) => {
       e.preventDefault();
 
