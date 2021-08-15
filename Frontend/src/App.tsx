@@ -6,12 +6,14 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import { SocketProvider } from './hooks/useSocket';
+import { PrivateRoute } from './routes/PrivateRoute';
 
-import Signup from './pages/Signup/Signup';
-import Signin from './pages/Signin/Signin';
-import Messenger from './pages/Messenger/Messenger';
 import Help from './pages/Help/Help';
 import Home from './pages/Home';
+import Messenger from './pages/Messenger/Messenger';
+import MyAccount from './pages/MyAccount/MyAccount';
+import Signin from './pages/Signin/Signin';
+import Signup from './pages/Signup/Signup';
 
 import {
    BrowserRouter as Router,
@@ -21,10 +23,6 @@ import {
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { PrivateRoute } from './routes/PrivateRoute';
-
-/* import { ToastProvider } from 'react-toast-notifications'; */
-
 
 export default function App() {
 
@@ -45,6 +43,7 @@ export default function App() {
                      <Route exact component={Signup} path="/signup" />
                      <Route exact component={Help} path="/help" />
                      <PrivateRoute exact component={Messenger} path="/messenger" />
+                     <PrivateRoute exact component={MyAccount} path="/myaccount" />
                   </Switch>
                </div>
 

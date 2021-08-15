@@ -11,6 +11,7 @@ module.exports = () => {
    db.mongoose
       .connect(uri, {
          useNewUrlParser: true,
+         useCreateIndex: true,
          useUnifiedTopology: true,
       })
       .then(() => {

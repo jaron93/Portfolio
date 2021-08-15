@@ -9,8 +9,7 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdPower } from 'react-icons/io';
 import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
 import { BiMessageDots } from 'react-icons/bi';
-import { RiMessengerFill } from 'react-icons/ri';
-
+import { RiMessengerFill, RiAccountCircleFill } from 'react-icons/ri';
 
 import { clearAuthTokens } from 'axios-jwt'
 import { clearState } from '../../store/slices/user'
@@ -80,6 +79,20 @@ const Sidebar: React.FC = () => {
                            <span className={cn(styles.links_name, isActive)}>Messenger</span>
                         </NavLink>
                         <span className={cn(styles.tooltip, isActive)}>Messenger</span>
+                     </li>
+                  }
+
+                  {!!userInfo &&
+                     <li>
+                        <NavLink
+                           to="/myaccount"
+                           onClick={() => { handleNavigateToPage() }}
+                           activeClassName={styles.active}
+                        >
+                           <RiAccountCircleFill />
+                           <span className={cn(styles.links_name, isActive)}>My Account</span>
+                        </NavLink>
+                        <span className={cn(styles.tooltip, isActive)}>My Account</span>
                      </li>
                   }
 

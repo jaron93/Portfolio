@@ -6,9 +6,10 @@ const User = mongoose.model(
       username: {
          type: String,
          required: [true, "Username required"],
-         minLength: 0,
+         minLength: 6,
          maxLength: 20,
          trim: true,
+         unique: true,
       },
       email: {
          type: String,
@@ -19,24 +20,30 @@ const User = mongoose.model(
             message: "Please enter a valid email"
          },
          required: [true, "Email required"],
+         unique: true,
       },
       password: {
          type: String,
          required: [true, "Password required"],
-         minLength: 0,
+         minLength: 6,
          trim: true,
+      },
+      profileAvatar: {
+         type: String,
+         default: "",
+      },
+      desc: {
+         type: String,
+         max: 50,
       },
       roles: [
          {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role"
          }
-      ],
-      date: {
-         type: Date,
-         default: Date.now
-      }
-   })
+      ]
+   },
+      { timestamps: true })
 );
 
 module.exports = User;

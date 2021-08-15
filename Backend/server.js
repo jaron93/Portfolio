@@ -3,16 +3,19 @@ const app = express();
 const http = require('http').createServer(app);
 const { port } = require('./config/config');
 const cors = require('cors');
-const io = require("socket.io")(http, {
+const helmet = require('helmet');
+
+const io = require('socket.io')(http, {
    cors: {
       origin: http,
    },
 });
 
-const jwt = require("jsonwebtoken");
-const config = require("./config/auth.config");
+const jwt = require('jsonwebtoken');
+const config = require('./config/auth.config');
 
 app.use(cors());
+app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
@@ -27,8 +30,8 @@ require('./routes/conversations.routes')(app);
 require('./routes/messages.routes')(app);
 
 
-app.get("/", (req, res) => {
-   res.json({ message: "Welcome to Jaroslaw api route." });
+app.get('/', (req, res) => {
+   res.json({ message: 'Welcome to Jaroslaw api route.' });
 });
 
 

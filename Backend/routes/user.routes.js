@@ -29,6 +29,12 @@ module.exports = function (app) {
       app.get("/api/users/:userId", controller.findFriend); */
 
    //Get user by Id or Username
-
    app.get("/api/user", controller.getUser);
+
+   //update user account
+   app.put("/api/user/:id", controller.updateUser);
+
+   //delete user account
+   app.delete("/api/user/:id", controller.deleteUser);
+
 };
