@@ -1,0 +1,29 @@
+@import '../../styles//variables.scss';
+
+.container {
+   width: 90%;
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: space-around;
+   margin-bottom: 15px;
+
+   .element{
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 60px;
+      background-color: $element-bg;
+      width: 400px;
+      height: 300px;
+      margin-top: 15px;
+      color: white;
+      font-weight: bold;
+      font-size: 1em;
+      text-align: center;
+
+      .header{
+         background-color: rgb(10, 104, 41);
+         padding: 8px;
+         border-radius: 0px 80px;
+      }
+   }
+}

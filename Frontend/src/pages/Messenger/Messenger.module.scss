@@ -1,10 +1,13 @@
+@import '../../styles//variables.scss';
+
 .container {
    margin: 10px;
    width: 100%;
    height: calc(100vh - 85px);
    border-radius: 10px;
    display: flex;
-   background-color: rgba(9, 20, 43, 0.76);
+   background-color: $element-bg;
+
    .menu{
       flex: 3;
       .menuInput {

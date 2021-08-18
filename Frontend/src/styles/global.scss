@@ -21,11 +21,13 @@ body {
    transition-duration: 0.5s;
    transition-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
    transition-property: all;
-   overflow: hidden;
+
+   &::-webkit-scrollbar {
+      display: none;
+  }
 }
 
 .main-content {
-   position: relative;
    margin-left: 78px;
    width: calc(100% - 78px);
    display: flex;
@@ -33,7 +35,7 @@ body {
    transition-duration: 0.5s;
    transition-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
    transition-property: all;
-   overflow: hidden;
+
    @include max(sm) {
       margin-left: 0;
       width: 100%;
@@ -46,18 +48,4 @@ body {
          display: none;
       }
    }
-   &::-webkit-scrollbar {
-      display: none;
-   }
 }
-
-
-.fade-enter {
-   opacity: 0;
-   z-index: 1;
- }
- 
- .fade-enter.fade-enter-active {
-   opacity: 1;
-   transition: opacity 250ms ease-in;
- }

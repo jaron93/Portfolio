@@ -13,7 +13,7 @@ ReactDOM.render(
          <PersistGate loading={<Loading />} persistor={persistor}>
             <App />
          </PersistGate>
-      </Provider>,
+      </Provider>
    </React.StrictMode>,
    document.getElementById('root')
 );
