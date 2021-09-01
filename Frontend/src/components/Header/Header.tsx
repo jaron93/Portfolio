@@ -4,12 +4,11 @@ import { CgCardSpades } from 'react-icons/cg';
 import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleBar } from '../../store/slices/preferences';
+import logo from '../../assets/logo.png'
 
 const Header: React.FC = () => {
 
    const dispatch = useDispatch();
-
-   const { username } = useSelector(state => state.user.userInfo)
 
    const handleClick = () => {
       dispatch(toggleBar());
@@ -17,24 +16,21 @@ const Header: React.FC = () => {
 
    return (
 
-
-
       <header className={styles.header}>
-         <div className={styles.menu_content}>
+
+         <div className={styles.menu}>
             <AiOutlineMenuUnfold className={styles.btn} onClick={handleClick} />
          </div>
 
-         <div className={styles.logo_content}>
+         <div className={styles.main}>
+
             <div className={styles.logo}>
-               <CgCardSpades className={styles.logo_icon} />
-               <div className={styles.logo_name}>Name of Site</div>
+               <img src={logo} alt="JN" />
+               <span className={styles.title}>Portfolio App</span>
             </div>
+
          </div>
-         {!!username &&
-            <div className={styles.welcome}>
-               <span>Welcome, {username}!</span>
-            </div>
-         }
+
       </header>
 
    )

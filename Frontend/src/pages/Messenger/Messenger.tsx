@@ -8,7 +8,7 @@ import { setOnlineUsers } from '../../store/slices/user'
 import { setConversations } from '../../store/slices/messenger';
 import styles from './Messenger.module.scss'
 
-import { axiosInstance } from '../../services/api';
+import { axiosUrl } from '../../services/api';
 import { useSocket } from '../../hooks/useSocket';
 
 const Messenger: FC = () => {
@@ -63,7 +63,7 @@ const Messenger: FC = () => {
    useEffect(() => {
       const getMessages = async () => {
          try {
-            const res = await axiosInstance("/api/messages/" + currentChat?._id);
+            const res = await axiosUrl.get("/api/messages/" + currentChat?._id);
             setMessages(res.data)
          } catch (err) {
             console.log(err);
@@ -77,7 +77,7 @@ const Messenger: FC = () => {
    useEffect(() => {
       const getConversations = async () => {
          try {
-            const res = await axiosInstance("/api/conversation/" + id);
+            const res = await axiosUrl.get("/api/conversation/" + id);
 
             if (!mountedRef.current) return null;
             dispatch(setConversations(res.data));
@@ -101,7 +101,7 @@ const Messenger: FC = () => {
          };
 
          try {
-            const res = await axiosInstance.post("/api/messages", message);
+            const res = await axiosUrl.post("/api/messages", message);
             /* dispatch(setMessages([...messages, res.data])) */
             setMessages([...messages, res.data])
             setNewMessage("")

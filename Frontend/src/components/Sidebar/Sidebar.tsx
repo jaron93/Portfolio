@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import styles from './Sidebar.module.scss'
-import { NavLink, useHistory } from 'react-router-dom'
+import { Link, NavLink, useHistory } from 'react-router-dom'
 import classNames from 'classnames';
 import { IconContext } from "react-icons";
 
@@ -9,7 +9,7 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdPower } from 'react-icons/io';
 import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
 import { BiMessageDots } from 'react-icons/bi';
-import { RiMessengerFill, RiAccountCircleFill } from 'react-icons/ri';
+import { RiMessengerFill, RiSettings3Line } from 'react-icons/ri';
 
 import { clearAuthTokens } from 'axios-jwt'
 import { clearState } from '../../store/slices/user'
@@ -36,6 +36,8 @@ const Sidebar: React.FC = () => {
 
 
    const { userInfo } = useSelector(state => state.user);
+   const { profileAvatar } = useSelector(state => state.user.userInfo);
+
 
    const handleNavigateToPage = () => {
       if (window.innerWidth <= 576) {
@@ -55,6 +57,7 @@ const Sidebar: React.FC = () => {
 
          <div className={cn(styles.sidebar, isActive)}>
             <ul>
+
                <div>
 
                   <li>
@@ -68,7 +71,7 @@ const Sidebar: React.FC = () => {
                      </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Home Page</span>
                   </li>
-                  {!!userInfo &&
+                  {userInfo &&
                      <li>
                         <NavLink
                            to="/messenger"
@@ -82,17 +85,17 @@ const Sidebar: React.FC = () => {
                      </li>
                   }
 
-                  {!!userInfo &&
+                  {userInfo &&
                      <li>
                         <NavLink
-                           to="/myaccount"
+                           to="/settings"
                            onClick={() => { handleNavigateToPage() }}
                            activeClassName={styles.active}
                         >
-                           <RiAccountCircleFill />
-                           <span className={cn(styles.links_name, isActive)}>My Account</span>
+                           <RiSettings3Line />
+                           <span className={cn(styles.links_name, isActive)}>Settings</span>
                         </NavLink>
-                        <span className={cn(styles.tooltip, isActive)}>My Account</span>
+                        <span className={cn(styles.tooltip, isActive)}>Settings</span>
                      </li>
                   }
 
@@ -147,15 +150,16 @@ const Sidebar: React.FC = () => {
                      </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Contact</span>
                   </li>
-
                </div>
 
-               {!!userInfo &&
+               {userInfo &&
                   <li>
-                     <div className={styles.logout} onClick={handleLogout}>
+                     <Link
+                        to="/"
+                        onClick={handleLogout}>
                         <IoMdPower />
                         <span className={cn(styles.links_name, isActive)}>Logout</span>
-                     </div>
+                     </Link>
                      <span className={cn(styles.tooltip, isActive)}>Logout</span>
                   </li>
                }

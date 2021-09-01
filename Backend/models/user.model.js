@@ -30,7 +30,7 @@ const User = mongoose.model(
       },
       profileAvatar: {
          type: String,
-         default: "",
+         default: "noAvatar.png",
       },
       desc: {
          type: String,

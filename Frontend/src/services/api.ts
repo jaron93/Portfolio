@@ -5,6 +5,7 @@ const BASE_URL = process.env.REACT_APP_API_URL
 
 // 1. Create an axios instance that you wish to apply the interceptor to
 export const axiosInstance = axios.create({ baseURL: BASE_URL })
+export const axiosUrl = axios.create({ baseURL: BASE_URL })
 
 // 2. Define token refresh function.
 const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promise<IAuthTokens | string> => {
@@ -21,6 +22,7 @@ const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promis
    //}
 
    return response.data.accessToken
+
 }
 
 // 3. Add interceptor to your axios instance

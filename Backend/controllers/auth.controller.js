@@ -110,6 +110,7 @@ exports.signin = (req, res) => {
             roles: authorities,
             accessToken: token,
             refreshToken: refreshToken,
+            profileAvatar: user.profileAvatar
          });
       });
 };
@@ -135,6 +136,7 @@ exports.refreshToken = async (req, res) => {
          res.status(403).json({
             message: "Refresh token was expired. Please make a new signin request",
          });
+         console.log("test");
          return;
       }
 

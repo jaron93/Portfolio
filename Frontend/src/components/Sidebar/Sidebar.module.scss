@@ -4,7 +4,7 @@
    position: fixed;
    top: 65px;
    left: 0;
-   height: calc(100% - 65px) !important;
+   height: calc(100% - 40px);
    width: 78px;
    background-color: rgba(21, 22, 26, 0.450);
    padding: 0 14px;
@@ -14,6 +14,8 @@
    border-right: 1px solid rgba(255, 255, 255, 0.200);
    border-top: 1px solid rgba(255, 255, 255, 0.200);
    z-index: 999;
+
+
    @include max(sm) {
       transform: translate(-100%);
     }
@@ -27,15 +29,25 @@
       width: 200px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       padding-bottom: 50px;
       overflow-y: scroll;
       overflow-x: visible;
       position: absolute;
-      margin-top: 50px;
+      margin-top: 15px;
+      justify-content: space-between;
+
       &::-webkit-scrollbar {
          display: none;
      }
+      .user {
+         margin-bottom: 25px;
+         
+         img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+         }
+      }
 
       li{
          position: relative;
@@ -44,10 +56,6 @@
          list-style: none;
          line-height: 50px;
          margin: 10px 0;
-         &.active{
-            width: 70px;
-            height: 70px;
-         }
          &:hover{
             .tooltip{
                transition: all 0.5s all;
@@ -82,7 +90,7 @@
                display: none;
             }
          }
-         a, .logout{
+         a {
             position: relative;
             display: flex;
             color: #fff;
@@ -103,7 +111,7 @@
                border-radius: 12px;
             }
 
-            .links_name{
+            .links_name {
                font-size: 18px;
                font-weight: 400;
                opacity: 0;
@@ -123,7 +131,3 @@
 
  }
 
-
- .test {
-   fill: linear-gradient(rgba(52,69,106,1) 42%, rgba(134,7,123,1) 100%);
- }
