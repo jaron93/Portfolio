@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './Conversation.module.scss'
 
 import image from '../../../assets/person/1.jpeg'
-import { axiosInstance } from '../../../services/api';
+import { axiosUrl } from '../../../services/api';
 
 
 function Conversation({ conversation, currentUserId }: any) {
@@ -14,7 +14,7 @@ function Conversation({ conversation, currentUserId }: any) {
 
       const getUser = async () => {
          try {
-            const res = await axiosInstance("/api/user?userId=" + friendId);
+            const res = await axiosUrl("/api/user?userId=" + friendId);
             setUser(res.data);
 
 

@@ -24,7 +24,7 @@
    }
    .menu{
       justify-content: center;
-      width: 78px;
+      width: 78px !important;
       height: 65px;
       display: flex;
       opacity: 1;
@@ -45,9 +45,12 @@
       }
    }
    .main {
+      display: flex;
+      width: calc(100% - 78px);
+      justify-content: space-between;
       z-index: 101;
-      .logo {
-         margin-left: 20px;
+      padding: 0 15px;
+      .left {
          display: flex;
          align-items: center;
          pointer-events: none;
@@ -57,13 +60,24 @@
             width: 50px;
          }
          .title{
-            margin-left: 20px;
+            margin-left: 15px;
             font-size: 20px;
             font-weight: 400;
             color: white;
             
          }
       }
+   .right {
+      display: flex;
+      align-items: center;
+
+      .notifications, .avatar  {
+         &:hover {
+            cursor: pointer;
+         }
+      }
+
+   }
 
    }
 

@@ -1,12 +1,18 @@
 import React from 'react'
 import styles from './Header.module.scss'
-import { CgCardSpades } from 'react-icons/cg';
+
 import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleBar } from '../../store/slices/preferences';
 import logo from '../../assets/logo.png'
 
+import Notifications from './HeaderComponents/Notifications/Notifications';
+import Avatar from 'react-avatar';
+
+
 const Header: React.FC = () => {
+
+   const { username, profileAvatar } = useSelector(state => state.user.userInfo);
 
    const dispatch = useDispatch();
 
@@ -15,7 +21,6 @@ const Header: React.FC = () => {
    }
 
    return (
-
       <header className={styles.header}>
 
          <div className={styles.menu}>
@@ -24,15 +29,34 @@ const Header: React.FC = () => {
 
          <div className={styles.main}>
 
-            <div className={styles.logo}>
+            <div className={styles.left}>
                <img src={logo} alt="JN" />
                <span className={styles.title}>Portfolio App</span>
+            </div>
+
+            <div className={styles.right}>
+               {/*      <IoNotifications
+                  style={{ marginRight: 10 }}
+                  size="22"
+                  color="white"
+                  className={styles.notifications}
+               /> */}
+               <Notifications />
+
+               <Avatar
+                  name={username}
+                  size="45"
+                  round
+                  color="#68686852"
+                  src={`/avatars/${profileAvatar}`}
+                  className={styles.avatar}
+               />
+
             </div>
 
          </div>
 
       </header>
-
    )
 }
 
