@@ -1,47 +1,40 @@
 import React, { useState } from 'react'
 import styles from './Notifications.module.scss'
 
-import Modal from '@material-ui/core/Modal';
-/* import Fade from '@material-ui/core/Fade'; */
-import Badge from '@material-ui/core/Badge';
-
-import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@mui/material/Modal';
+import Badge from '@mui/material/Badge';
 
 import { ImBullhorn } from 'react-icons/im';
 import { IoNotifications } from 'react-icons/io5';
-
-
-const useStyles = makeStyles((theme) => ({
-   root: {
-      '& > *': {
-         margin: theme.spacing(2),
-      },
-   },
-}));
+import Fade from '@mui/material/Fade';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSeen } from '../../../../store/slices/announcements';
 
 export default function Notifications() {
-
-   const classes = useStyles();
+   const dispatch = useDispatch()
+   const { announcements } = useSelector(state => state.announcements);
    const [open, setOpen] = useState(false);
+
+   // Open and close Modal with announcements
    const handleOpen = () => {
       setOpen(true);
    };
-
    const handleClose = () => {
       setOpen(false);
    };
 
+   // Check how many announcement are not checked yet.
+   const notSeen = announcements.filter(function (a: { seen: boolean; }) { return a.seen === false; }).length;
+
    return (
       <>
-         <div className={classes.root}>
-            <Badge badgeContent={3} color="primary">
-               <IoNotifications
-                  onClick={handleOpen}
-                  style={{ cursor: 'pointer' }}
-                  size="22"
-                  color="white" />
-            </Badge>
-         </div>
+         <Badge badgeContent={notSeen} color="primary">
+            <IoNotifications
+               onClick={handleOpen}
+               style={{ cursor: 'pointer' }}
+               size="22"
+               color="white" />
+         </Badge>
          <Modal
             open={open}
             onClose={handleClose}
@@ -50,19 +43,22 @@ export default function Notifications() {
             closeAfterTransition
             BackdropProps={{ style: { backgroundColor: 'transparent' } }}
          >
-            {/* <Fade in={open}> */}
-            <div className={styles.modal}>
-               <ul>
-                  <li className={styles.notification}>
-                     <ImBullhorn size="25" />
-                     <div className={styles.container}>
-                        <span className={styles.time}>Sep 01 2021 - 13: 59: 06 (GMT+2)</span>
-                        <p className={styles.text}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                     </div>
-                  </li>
-               </ul>
-            </div>
-            {/* </Fade> */}
+            <Fade in={open}>
+               <div className={styles.modal}>
+                  <ul>
+                     {announcements.map((a: any) => (
+                        <li key={a.id} className={styles.notification} onClick={() => dispatch(toggleSeen(a))}>
+                           <ImBullhorn size="25" />
+                           <div className={styles.container}>
+                              <span className={styles.time}>{a.date}</span>
+                              <p className={styles.text}>{a.text}</p>
+                           </div>
+                        </li>
+                     ))}
+                  </ul>
+               </div>
+            </Fade>
+
          </Modal>
       </>
    )

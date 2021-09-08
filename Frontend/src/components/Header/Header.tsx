@@ -5,7 +5,7 @@ import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleBar } from '../../store/slices/preferences';
 import logo from '../../assets/logo.png'
-
+import { Stack } from '@mui/material';
 import Notifications from './HeaderComponents/Notifications/Notifications';
 import Avatar from 'react-avatar';
 
@@ -35,23 +35,17 @@ const Header: React.FC = () => {
             </div>
 
             <div className={styles.right}>
-               {/*      <IoNotifications
-                  style={{ marginRight: 10 }}
-                  size="22"
-                  color="white"
-                  className={styles.notifications}
-               /> */}
-               <Notifications />
-
-               <Avatar
-                  name={username}
-                  size="45"
-                  round
-                  color="#68686852"
-                  src={`/avatars/${profileAvatar}`}
-                  className={styles.avatar}
-               />
-
+               <Stack spacing={2} direction="row" alignItems="center">
+                  <Notifications />
+                  <Avatar
+                     name={username}
+                     size="45"
+                     round
+                     color="#68686852"
+                     src={`/avatars/${profileAvatar}`}
+                     className={styles.avatar}
+                  />
+               </Stack>
             </div>
 
          </div>

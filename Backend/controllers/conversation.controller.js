@@ -1,8 +1,8 @@
-const Conversation = require("../models/conversation");
+const Conversation = require("../models/conversation.model");
 
-//new conv
-
+//Create new conversation betwen two user.
 exports.newConversation = async (req, res) => {
+
    const newConversation = new Conversation({
       members: [req.body.senderId, req.body.receiverId],
    });

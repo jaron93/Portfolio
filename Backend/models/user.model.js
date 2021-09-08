@@ -7,7 +7,7 @@ const User = mongoose.model(
          type: String,
          required: [true, "Username required"],
          minLength: 6,
-         maxLength: 20,
+         maxLength: 30,
          trim: true,
          unique: true,
       },
@@ -36,12 +36,10 @@ const User = mongoose.model(
          type: String,
          max: 50,
       },
-      roles: [
-         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Role"
-         }
-      ]
+      isAdmin: {
+         type: Boolean,
+         default: false,
+      },
    },
       { timestamps: true })
 );

@@ -16,6 +16,7 @@ import localStorage from 'redux-persist/lib/storage';
 import preferencesReducer from './slices/preferences';
 import userReducer from './slices/user';
 import messengerReducer from './slices/messenger'
+import announcementsReducer from './slices/announcements'
 
 const PersistConfig = {
    key: 'root',
@@ -26,6 +27,7 @@ const appReducer = combineReducers({
    preferences: preferencesReducer,
    user: userReducer,
    messenger: messengerReducer,
+   announcements: announcementsReducer,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
