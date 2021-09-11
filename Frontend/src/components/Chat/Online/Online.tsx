@@ -2,7 +2,7 @@ import styles from './Online.module.scss'
 
 import image from '../../../assets/person/6.jpeg'
 import { useEffect, useState } from 'react';
-import { axiosInstance } from '../../../services/api';
+import api from '../../../services/api';
 
 
 export default function Online({ onlineUsers, currentUserId, setCurrentChat }: any) {
@@ -12,7 +12,7 @@ export default function Online({ onlineUsers, currentUserId, setCurrentChat }: a
    useEffect(() => {
       const getUser = async () => {
          try {
-            const res = await axiosInstance("/api/user?userId=" + onlineUsers.userId);
+            const res = await api.get("/api/user?userId=" + onlineUsers.userId);
             setUser(res.data);
 
          } catch (err) {
@@ -25,7 +25,7 @@ export default function Online({ onlineUsers, currentUserId, setCurrentChat }: a
 
    const handleClick = async () => {
       try {
-         const res = await axiosInstance(
+         const res = await api(
             `/api/conversation/find/${currentUserId}/${user._id}`
          );
 
@@ -35,7 +35,7 @@ export default function Online({ onlineUsers, currentUserId, setCurrentChat }: a
                'receiverId': user._id
             }
 
-            const res = await axiosInstance.post(
+            const res = await api.post(
                `/api/conversation/`, data
             );
             setCurrentChat(res.data);

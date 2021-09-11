@@ -9,5 +9,6 @@ db.user = require("./user.model");
 db.refreshToken = require("./refreshToken.model");
 db.message = require("./message.model");
 db.conversation = require("./conversation.model");
+db.notification = require("./notification.model");
 
 module.exports = db;

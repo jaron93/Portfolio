@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { axiosInstance } from '../../services/api'
-import { setAuthTokens } from 'axios-jwt'
-
+import api from '../../services/api';
+import { setAuthTokens, clearAuthTokens } from '../../services/token.service'
 
 interface ISignupFormData {
    username: string;
@@ -14,12 +13,11 @@ interface ISigninFormData {
    password: string;
 }
 
-
 export const signupUser = createAsyncThunk(
    'users/signup',
    async ({ username, email, password }: ISignupFormData, thunkAPI) => {
       try {
-         const response = await axiosInstance.post('/api/auth/signup', { username, email, password })
+         const response = await api.post('/api/auth/signup', { username, email, password })
 
          const data = await response.data;
 
@@ -28,9 +26,9 @@ export const signupUser = createAsyncThunk(
          } else {
             return thunkAPI.rejectWithValue(data);
          }
-      } catch (e) {
-         console.log('Error', e.response.data);
-         return thunkAPI.rejectWithValue(e.response.data);
+      } catch (error: any) {
+         console.log('Error', error.response.data);
+         return thunkAPI.rejectWithValue(error.response.data);
       }
 
    });
@@ -39,23 +37,24 @@ export const signinUser = createAsyncThunk(
    'users/signin',
    async ({ username, password }: ISigninFormData, thunkAPI) => {
       try {
-         const response = await axiosInstance.post('/api/auth/signin', { username, password })
+         const response = await api.post('/api/auth/signin', { username, password })
 
          // save tokens to storage
          setAuthTokens({
             accessToken: response.data.accessToken,
             refreshToken: response.data.refreshToken
          })
-         const data = await response.data;
+
+         const { accessToken, refreshToken, ...other } = await response.data;
 
          if (response.status === 200) {
-            return { ...data, username: username };
+            return { ...other };
          } else {
-            return thunkAPI.rejectWithValue(data);
+            return thunkAPI.rejectWithValue(other);
          }
-      } catch (e) {
-         console.log('Error', e.response.data);
-         return thunkAPI.rejectWithValue(e.response.data);
+      } catch (error: any) {
+         console.log('Error', error.response.data);
+         return thunkAPI.rejectWithValue(error.response.data);
       }
 
    });
@@ -80,8 +79,11 @@ export const userSlice = createSlice({
    name: 'user',
    initialState,
    reducers: {
+      logout() {
+         clearAuthTokens()
+      },
       clearState() {
-         return initialState;
+         return initialState
       },
       setOnlineUsers: (state, { payload }: PayloadAction<any>) => {
          state.onlineUsers = payload
@@ -126,7 +128,7 @@ export const userSlice = createSlice({
 
 export default userSlice.reducer;
 
-export const { clearState, setOnlineUsers } = userSlice.actions;
+export const { logout, setOnlineUsers, clearState } = userSlice.actions;
 
 
 

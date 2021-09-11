@@ -10,31 +10,16 @@ module.exports = function (app) {
       next();
    });
 
-   app.get("/api/all", controller.allAccess);
+   app.get("/api/all", authJwt.verifyToken, controller.allAccess);
 
-   /*    app.get("/api/user", [authJwt.verifyToken], controller.userBoard); */
-
-   app.get(
-      "/api/mod",
-      [authJwt.verifyToken, authJwt.isModerator],
-      controller.moderatorBoard
-   );
-
-   app.get(
-      "/api/admin",
-      [authJwt.verifyToken, authJwt.isAdmin],
-      controller.adminBoard
-   );
-   /* 
-      app.get("/api/users/:userId", controller.findFriend); */
 
    //Get user by Id or Username
-   app.get("/api/user", controller.getUser);
+   app.get("/api/user", authJwt.verifyToken, controller.getUser);
 
    //update user account
-   app.put("/api/user/:id", controller.updateUser);
+   app.put("/api/user/:id", authJwt.verifyToken, controller.updateUser);
 
    //delete user account
-   app.delete("/api/user/:id", controller.deleteUser);
+   app.delete("/api/user/:id", authJwt.verifyToken, controller.deleteUser);
 
 };

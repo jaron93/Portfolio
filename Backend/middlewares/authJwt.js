@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../models");
-const User = db.user;
-const Role = db.role;
+/* const User = db.user; */
 const { TokenExpiredError } = jwt;
 
 const catchError = (err, res) => {
@@ -29,7 +28,7 @@ const verifyToken = (req, res, next) => {
    });
 };
 
-isAdmin = (req, res, next) => {
+/* isAdmin = (req, res, next) => {
    User.findById(req.userId).exec((err, user) => {
       if (err) {
          res.status(500).send({ message: err });
@@ -58,43 +57,13 @@ isAdmin = (req, res, next) => {
          }
       );
    });
-};
+}; */
 
-isModerator = (req, res, next) => {
-   User.findById(req.userId).exec((err, user) => {
-      if (err) {
-         res.status(500).send({ message: err });
-         return;
-      }
-
-      Role.find(
-         {
-            _id: { $in: user.roles }
-         },
-         (err, roles) => {
-            if (err) {
-               res.status(500).send({ message: err });
-               return;
-            }
-
-            for (let i = 0; i < roles.length; i++) {
-               if (roles[i].name === "moderator") {
-                  next();
-                  return;
-               }
-            }
-
-            res.status(403).send({ message: "Require Moderator Role!" });
-            return;
-         }
-      );
-   });
-};
 
 const authJwt = {
-   verifyToken,
-   isAdmin,
-   isModerator
+   verifyToken
+   /*    isAdmin,
+    */
 };
 
 module.exports = authJwt;

@@ -2,14 +2,12 @@ import React, { FC } from 'react'
 import styles from './Settings.module.scss'
 
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { RiLockPasswordLine } from 'react-icons/ri';
 import { IconContext } from 'react-icons';
 
 
 const Settings: FC = () => {
 
-   const { username, email, id, profileAvatar } = useSelector(state => state.user.userInfo);
+   const { username, profileAvatar } = useSelector(state => state.user.userInfo);
 
    return (
       <IconContext.Provider value={{ className: styles.icon }}>

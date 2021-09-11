@@ -13,14 +13,12 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      -webkit-box-pack: center;
       justify-content: center;
       padding: 6px 12px;
       margin-left: 16px;
       width: 100%;
       background-color: rgb(37, 38, 48);
       border-radius: 5px;
-
       &::before {
          content: "";
          position: absolute;
@@ -33,7 +31,7 @@
          border-right: 6px solid rgb(37, 38, 48);
       }
 
-      .time, .text {
+      .time {
          font-size: 11px;
          color: rgb(173, 175, 185);
       }
@@ -41,6 +39,7 @@
       .text {
          font-size: 14px;
          margin-top: 8px;
+         color: rgb(173, 175, 185);
       }
    }
 }

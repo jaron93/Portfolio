@@ -31,7 +31,7 @@ const appReducer = combineReducers({
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
-   if (action.type === 'user/clearState') {
+   if (action.type === 'user/logout') {
 
       // this applies to all keys defined in persistConfig(s)
       localStorage.removeItem('persist:root')

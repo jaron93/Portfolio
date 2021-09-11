@@ -67,7 +67,6 @@ exports.signin = async (req, res) => {
    }
 };
 
-
 exports.refreshToken = async (req, res) => {
    const { refreshToken: requestToken } = req.body;
 
@@ -104,3 +103,4 @@ exports.refreshToken = async (req, res) => {
       return res.status(500).send({ message: err });
    }
 };
+

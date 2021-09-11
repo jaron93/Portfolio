@@ -1,33 +1,36 @@
-import React, { createRef, FC, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from "react-redux";
+import { createRef, FC, useEffect, useRef, useState } from 'react'
+import styles from './Messenger.module.scss'
 
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import { setConversations } from '../../store/slices/messenger';
+
+//Chat
 import Conversation from '../../components/Chat/Conversation/Conversation'
 import Message from '../../components/Chat/Message/Message'
 import Online from '../../components/Chat/Online/Online'
-import { setOnlineUsers } from '../../store/slices/user'
-import { setConversations } from '../../store/slices/messenger';
-import styles from './Messenger.module.scss'
 
-import { axiosUrl } from '../../services/api';
+//API
+import api from '../../services/api';
 import { useSocket } from '../../hooks/useSocket';
 
 const Messenger: FC = () => {
-   const scrollRef = createRef<HTMLDivElement>();
-   const { socket } = useSocket();
+
+   //Redux
+   const { conversations } = useSelector(state => state.messenger);
+   const { onlineUsers } = useSelector(state => state.user);
+   const { id } = useSelector(state => state.user.userInfo);
    const dispatch = useDispatch()
 
+   const { socket } = useSocket();
+   const scrollRef = createRef<HTMLDivElement>();
+   const mountedRef = useRef(true)
+
+   //State
    const [messages, setMessages] = useState<any>([]);
-   /*   const [conversations, setConversations] = useState([]); */
    const [currentChat, setCurrentChat] = useState<any>(null);
    const [newMessage, setNewMessage] = useState("");
    const [arrivalMessage, setArrivalMessage] = useState<any>(null);
-
-   const mountedRef = useRef(true)
-
-   const { conversations } = useSelector(state => state.messenger);
-
-   const { onlineUsers } = useSelector(state => state.user);
-   const { id } = useSelector(state => state.user.userInfo);
 
 
    useEffect(() => {
@@ -46,6 +49,7 @@ const Messenger: FC = () => {
             _id: Math.floor(Math.random() * 99999)
          });
       });
+
       return () => {
          disconnect();
       };
@@ -63,7 +67,7 @@ const Messenger: FC = () => {
    useEffect(() => {
       const getMessages = async () => {
          try {
-            const res = await axiosUrl.get("/api/messages/" + currentChat?._id);
+            const res = await api.get("/api/messages/" + currentChat?._id);
             setMessages(res.data)
          } catch (err) {
             console.log(err);
@@ -77,7 +81,7 @@ const Messenger: FC = () => {
    useEffect(() => {
       const getConversations = async () => {
          try {
-            const res = await axiosUrl.get("/api/conversation/" + id);
+            const res = await api.get("/api/conversation/" + id);
 
             if (!mountedRef.current) return null;
             dispatch(setConversations(res.data));
@@ -101,7 +105,7 @@ const Messenger: FC = () => {
          };
 
          try {
-            const res = await axiosUrl.post("/api/messages", message);
+            const res = await api.post("/api/messages", message);
             /* dispatch(setMessages([...messages, res.data])) */
             setMessages([...messages, res.data])
             setNewMessage("")
@@ -112,7 +116,6 @@ const Messenger: FC = () => {
          const receiverId = currentChat.members.find(
             (member: any) => member !== id
          );
-
 
          socket.emit("sendMessage", {
             senderId: id,

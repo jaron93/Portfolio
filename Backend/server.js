@@ -7,7 +7,7 @@ const helmet = require('helmet');
 
 const io = require('socket.io')(http, {
    cors: {
-      origin: http,
+      origin: 'http://localhost:3000',
    },
 });
 
@@ -28,7 +28,7 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/conversations.routes')(app);
 require('./routes/messages.routes')(app);
-
+require('./routes/notification.routes')(app);
 
 app.get('/', (req, res) => {
    res.json({ message: 'Welcome to Jaroslaw api route.' });

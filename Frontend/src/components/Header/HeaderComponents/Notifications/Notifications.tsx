@@ -1,19 +1,29 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './Notifications.module.scss'
 
+//Material UI 
 import Modal from '@mui/material/Modal';
 import Badge from '@mui/material/Badge';
+import Fade from '@mui/material/Fade';
 
+//React Icons
 import { ImBullhorn } from 'react-icons/im';
 import { IoNotifications } from 'react-icons/io5';
-import Fade from '@mui/material/Fade';
+
+//Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSeen } from '../../../../store/slices/announcements';
+import { setAnnouncements, toggleSeen } from '../../../../store/slices/announcements';
+
+//Axios API Instance
+import api from '../../../../services/api';
 
 export default function Notifications() {
    const dispatch = useDispatch()
    const { announcements } = useSelector(state => state.announcements);
+   const { id } = useSelector(state => state.user.userInfo);
+
    const [open, setOpen] = useState(false);
+
 
    // Open and close Modal with announcements
    const handleOpen = () => {
@@ -23,12 +33,25 @@ export default function Notifications() {
       setOpen(false);
    };
 
+   useEffect(() => {
+      const getNotification = async () => {
+         try {
+            const res = await api.get("/api/notification/" + id);
+            dispatch(setAnnouncements(res.data))
+         } catch (err) {
+            console.log(err);
+         }
+      };
+      getNotification();
+
+   }, [dispatch, id]);
+
    // Check how many announcement are not checked yet.
-   const notSeen = announcements.filter(function (a: { seen: boolean; }) { return a.seen === false; }).length;
+   const isNotSeen = announcements.filter((a: { is_read: boolean }) => (a.is_read === false)).length
 
    return (
       <>
-         <Badge badgeContent={notSeen} color="primary">
+         <Badge badgeContent={isNotSeen} color="primary">
             <IoNotifications
                onClick={handleOpen}
                style={{ cursor: 'pointer' }}
@@ -46,19 +69,27 @@ export default function Notifications() {
             <Fade in={open}>
                <div className={styles.modal}>
                   <ul>
-                     {announcements.map((a: any) => (
-                        <li key={a.id} className={styles.notification} onClick={() => dispatch(toggleSeen(a))}>
-                           <ImBullhorn size="25" />
-                           <div className={styles.container}>
-                              <span className={styles.time}>{a.date}</span>
-                              <p className={styles.text}>{a.text}</p>
-                           </div>
-                        </li>
-                     ))}
+                     {announcements.length ?
+                        (
+                           announcements.map((a: any) => (
+                              <li key={a._id}
+                                 className={styles.notification}
+                                 onClick={() => dispatch(toggleSeen(a))}>
+                                 <ImBullhorn size="25" color={a.is_read ? "gray" : "white"}
+                                 />
+                                 <div className={styles.container}>
+                                    <span className={styles.time}>{a.created_at}</span>
+                                    <p className={styles.text}>{a.message}</p>
+                                 </div>
+                              </li>
+                           ))
+                        )
+                        :
+                        <p>test</p>
+                     }
                   </ul>
                </div>
             </Fade>
-
          </Modal>
       </>
    )

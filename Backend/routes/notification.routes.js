@@ -1,4 +1,4 @@
-const controller = require("../controllers/message.controller");
+const controller = require("../controllers/notification.controller");
 const { authJwt } = require("../middlewares");
 
 
@@ -11,7 +11,7 @@ module.exports = function (app) {
       next();
    });
 
-   app.post("/api/messages", authJwt.verifyToken, controller.newMessage);
+   app.post("/api/notification", authJwt.verifyToken, controller.newNotification);
 
-   app.get("/api/messages/:conversationId", authJwt.verifyToken, controller.findMessages);
+   app.get("/api/notification/:receiver", authJwt.verifyToken, controller.findNotification);
 };

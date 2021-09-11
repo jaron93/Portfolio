@@ -5,7 +5,7 @@ import { setOnlineUsers } from '../store/slices/user'
 import { Socket, io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { axiosUrl } from '../services/api';
+import api from '../services/api';
 import { getAccessToken } from 'axios-jwt';
 
 
@@ -83,7 +83,7 @@ const SocketProvider: React.FC = ({ children }) => {
    useEffect(() => {
 
       socket.on("getMessage2", async (data: any) => {
-         await axiosUrl.get("/api/user?userId=" + data.senderId)
+         await api.get("/api/user?userId=" + data.senderId)
             .then(res => toast.warning(`${res.data.username}: ` + data.text))
       })
    }, [socket]);

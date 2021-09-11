@@ -3,29 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import styles from './Sidebar.module.scss'
 import { Link, NavLink, useHistory } from 'react-router-dom'
 import classNames from 'classnames';
-import { IconContext } from "react-icons";
 
+import { IconContext } from "react-icons";
 import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdPower } from 'react-icons/io';
 import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
 import { BiMessageDots } from 'react-icons/bi';
 import { RiMessengerFill, RiSettings3Line } from 'react-icons/ri';
-
-import { clearAuthTokens } from 'axios-jwt'
-import { clearState } from '../../store/slices/user'
+import { logout } from '../../store/slices/user'
 import { hideBar } from '../../store/slices/preferences'
 
-
-
+import { IsLoggedIn } from '../../services/token.service'
 
 let cn = classNames;
-
-<svg width="0" height="0">
-   <linearGradient id="blueGradient" x1="100%" y1="100%" x2="0%" y2="0%">
-      <stop stopColor="#7a6ded" offset="0%" />
-      <stop stopColor="#591885" offset="100%" />
-   </linearGradient>
-</svg>
 
 const Sidebar: React.FC = () => {
    const history = useHistory();
@@ -34,11 +24,6 @@ const Sidebar: React.FC = () => {
 
    const isActive = sidebarOpen && styles['isActive'];
 
-
-   const { userInfo } = useSelector(state => state.user);
-   const { profileAvatar } = useSelector(state => state.user.userInfo);
-
-
    const handleNavigateToPage = () => {
       if (window.innerWidth <= 576) {
          dispatch(hideBar());
@@ -46,9 +31,7 @@ const Sidebar: React.FC = () => {
    }
 
    const handleLogout = () => {
-      clearAuthTokens()
-      dispatch(clearState())
-
+      dispatch(logout())
       history.push('/')
    }
 
@@ -71,7 +54,7 @@ const Sidebar: React.FC = () => {
                      </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Home Page</span>
                   </li>
-                  {userInfo &&
+                  {IsLoggedIn() &&
                      <li>
                         <NavLink
                            to="/messenger"
@@ -85,7 +68,7 @@ const Sidebar: React.FC = () => {
                      </li>
                   }
 
-                  {userInfo &&
+                  {IsLoggedIn() &&
                      <li>
                         <NavLink
                            to="/settings"
@@ -100,7 +83,7 @@ const Sidebar: React.FC = () => {
                   }
 
 
-                  {!userInfo &&
+                  {!IsLoggedIn() &&
                      <li>
                         <NavLink
                            to="/signin"
@@ -113,7 +96,7 @@ const Sidebar: React.FC = () => {
                         <span className={cn(styles.tooltip, isActive)}>Login</span>
                      </li>
                   }
-                  {!userInfo &&
+                  {!IsLoggedIn() &&
                      <li>
                         <NavLink
                            to="/signup"
@@ -152,7 +135,7 @@ const Sidebar: React.FC = () => {
                   </li>
                </div>
 
-               {userInfo &&
+               {IsLoggedIn() &&
                   <li>
                      <Link
                         to="/"
