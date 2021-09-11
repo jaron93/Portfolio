@@ -1,64 +1,33 @@
-import axios from "axios";
-import {
-   getAccessToken,
-   getRefreshToken,
-   updateAccessToken
-} from "./token.service";
+import { IAuthTokens, TokenRefreshRequest, applyAuthTokenInterceptor } from 'axios-jwt'
+import axios from 'axios'
 
-//Url is stored in .env files 
 const BASE_URL = process.env.REACT_APP_API_URL
 
-const axiosInstance = axios.create({
-   baseURL: BASE_URL,
-   headers: {
-      "Content-Type": "application/json",
-   },
-});
+// 1. Create an axios instance that you wish to apply the interceptor to
+export const axiosInstance = axios.create({ baseURL: BASE_URL })
 
-//Interceptor settings for axios instance.
-//Send x-access-token with header with every inquiry without login. Otherwise api respond error.
-axiosInstance.interceptors.request.use(
-   (config) => {
-      const token = getAccessToken();
-      if (token) {
-         config.headers["x-access-token"] = token;
-      }
-      return config;
-   },
-   (error) => {
-      return Promise.reject(error);
-   }
-);
+// 2. Define token refresh function.
+const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promise<IAuthTokens | string> => {
 
-axiosInstance.interceptors.response.use(
-   (res) => {
-      return res;
-   },
-   async (err) => {
-      const originalConfig = err.config;
+   // Important! Do NOT use the axios instance that you supplied to applyAuthTokenInterceptor (in our case 'axiosInstance')
+   // because this will result in an infinite loop when trying to refresh the token.
+   // Use the global axios client or a different instance
+   const response = await axios.post(`${BASE_URL}/api/auth/refreshToken`, { refreshToken })
 
-      if (originalConfig.url !== "/api/auth/signin" && err.response) {
-         // Access Token was expired
-         if (err.response.status === 401 && !originalConfig._retry) {
-            originalConfig._retry = true;
+   // If your backend supports rotating refresh tokens, you may also choose to return an object containing both tokens:
+   // return {
+   //  accessToken: response.data.access_token,
+   //  refreshToken: response.data.refresh_token
+   //}
 
-            try {
-               const rs = await axiosInstance.post("api/auth/refreshtoken", {
-                  refreshToken: getRefreshToken(),
-               });
+   return response.data.accessToken
+}
 
-               const { accessToken } = rs.data;
-               updateAccessToken(accessToken);
-
-               return axiosInstance(originalConfig);
-            } catch (_error) {
-               return Promise.reject(_error);
-            }
-         }
-      }
-
-      return Promise.reject(err);
-   }
-);
+// 3. Add interceptor to your axios instance
+applyAuthTokenInterceptor(axiosInstance, {
+   requestRefresh,  // async function that takes a refreshToken and returns a promise the resolves in a fresh accessToken
+   header: "x-access-token",  // header name
+   headerPrefix: "",  // header value prefix})
+})
 
 export default axiosInstance;

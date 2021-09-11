@@ -67,6 +67,7 @@
       ]
    },
    "devDependencies": {
+      "@types/jsonwebtoken": "^8.5.5",
       "@types/react-redux": "^7.1.18",
       "@types/react-router-dom": "^5.1.7",
       "@types/react-sticky-el": "^1.0.2",

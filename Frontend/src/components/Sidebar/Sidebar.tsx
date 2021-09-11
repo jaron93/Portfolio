@@ -13,7 +13,7 @@ import { RiMessengerFill, RiSettings3Line } from 'react-icons/ri';
 import { logout } from '../../store/slices/user'
 import { hideBar } from '../../store/slices/preferences'
 
-import { IsLoggedIn } from '../../services/token.service'
+import { isLoggedIn } from 'axios-jwt'
 
 let cn = classNames;
 
@@ -54,7 +54,7 @@ const Sidebar: React.FC = () => {
                      </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Home Page</span>
                   </li>
-                  {IsLoggedIn() &&
+                  {isLoggedIn() &&
                      <li>
                         <NavLink
                            to="/messenger"
@@ -68,7 +68,7 @@ const Sidebar: React.FC = () => {
                      </li>
                   }
 
-                  {IsLoggedIn() &&
+                  {isLoggedIn() &&
                      <li>
                         <NavLink
                            to="/settings"
@@ -83,7 +83,7 @@ const Sidebar: React.FC = () => {
                   }
 
 
-                  {!IsLoggedIn() &&
+                  {!isLoggedIn() &&
                      <li>
                         <NavLink
                            to="/signin"
@@ -96,7 +96,7 @@ const Sidebar: React.FC = () => {
                         <span className={cn(styles.tooltip, isActive)}>Login</span>
                      </li>
                   }
-                  {!IsLoggedIn() &&
+                  {!isLoggedIn() &&
                      <li>
                         <NavLink
                            to="/signup"
@@ -135,7 +135,7 @@ const Sidebar: React.FC = () => {
                   </li>
                </div>
 
-               {IsLoggedIn() &&
+               {isLoggedIn() &&
                   <li>
                      <Link
                         to="/"

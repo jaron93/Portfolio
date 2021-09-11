@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../services/api';
-import { setAuthTokens, clearAuthTokens } from '../../services/token.service'
+import { setAuthTokens, clearAuthTokens } from 'axios-jwt'
 
 interface ISignupFormData {
    username: string;

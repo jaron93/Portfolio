@@ -46,7 +46,7 @@ exports.signin = async (req, res) => {
 
       //Create JSON Web Token
       let token = jwt.sign({ id: user.id }, config.secret, {
-         expiresIn: 3600 // 1 hours
+         expiresIn: 3600 // 1 hour
       });
 
       //Create Refresh Token
