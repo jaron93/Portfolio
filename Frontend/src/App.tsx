@@ -18,13 +18,15 @@ import Signup from './pages/Signup/Signup';
 import {
    BrowserRouter as Router,
    Switch,
-   Route,
+   Route
 } from "react-router-dom"
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function App() {
+
+
+function App() {
 
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
 
@@ -50,7 +52,7 @@ export default function App() {
             </Router >
 
             <ToastContainer
-               position="top-right"
+               position="bottom-right"
                autoClose={5000}
                hideProgressBar={false}
                newestOnTop
@@ -64,3 +66,4 @@ export default function App() {
       </>
    );
 }
+export default App

@@ -1,4 +1,4 @@
-import { createRef, FC, useEffect, useRef, useState } from 'react'
+import { createRef, FC, useCallback, useEffect, useRef, useState } from 'react'
 import styles from './Messenger.module.scss'
 
 //Redux
@@ -13,13 +13,17 @@ import Online from '../../components/Chat/Online/Online'
 //API
 import api from '../../services/api';
 import { useSocket } from '../../hooks/useSocket';
+import Loading from '../../components/Loading/Loading';
+
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 const Messenger: FC = () => {
 
    //Redux
-   const { conversations } = useSelector(state => state.messenger);
+   const { conversations, /* messages */ } = useSelector(state => state.messenger);
    const { onlineUsers } = useSelector(state => state.user);
-   const { id } = useSelector(state => state.user.userInfo);
+   const { id, username } = useSelector(state => state.user.userInfo);
    const dispatch = useDispatch()
 
    const { socket } = useSocket();
@@ -27,11 +31,16 @@ const Messenger: FC = () => {
    const mountedRef = useRef(true)
 
    //State
-   const [messages, setMessages] = useState<any>([]);
    const [currentChat, setCurrentChat] = useState<any>(null);
    const [newMessage, setNewMessage] = useState("");
    const [arrivalMessage, setArrivalMessage] = useState<any>(null);
 
+   //Message state for infinite scroll
+   const [messages, setMessages] = useState<any>([]);
+   const [hasMore, setHasMore] = useState(true);
+   const [page, setPage] = useState(2);
+
+   console.log(messages);
 
    useEffect(() => {
 
@@ -65,20 +74,6 @@ const Messenger: FC = () => {
    }, [arrivalMessage, currentChat]);
 
    useEffect(() => {
-      const getMessages = async () => {
-         try {
-            const res = await api.get("/api/messages/" + currentChat?._id);
-            setMessages(res.data)
-         } catch (err) {
-            console.log(err);
-         }
-      };
-      getMessages();
-      return () => { mountedRef.current = false }
-
-   }, [currentChat]);
-
-   useEffect(() => {
       const getConversations = async () => {
          try {
             const res = await api.get("/api/conversation/" + id);
@@ -106,8 +101,7 @@ const Messenger: FC = () => {
 
          try {
             const res = await api.post("/api/messages", message);
-            /* dispatch(setMessages([...messages, res.data])) */
-            setMessages([...messages, res.data])
+            setMessages([res.data, ...messages])
             setNewMessage("")
          } catch (err) {
             console.log(err);
@@ -119,6 +113,7 @@ const Messenger: FC = () => {
 
          socket.emit("sendMessage", {
             senderId: id,
+            senderUsername: username,
             receiverId,
             text: newMessage,
          });
@@ -128,8 +123,45 @@ const Messenger: FC = () => {
 
    //Scroll down messages by using references
    useEffect(() => {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-   }, [messages, scrollRef]);
+      scrollRef.current?.scrollIntoView()
+
+   });
+
+   useEffect(() => {
+
+      const getMessages = async () => {
+         try {
+            const res = await api.get("/api/messages/" + currentChat?._id + `?page=1&count=10`)
+            setMessages(res.data)
+         } catch (err) {
+            console.log(err);
+         }
+      }
+
+      getMessages()
+   }, [currentChat?._id]);
+
+
+   const fetchMessages = async () => {
+      try {
+         let res = await api.get("/api/messages/" + currentChat?._id + `?page=${page}&count=10`)
+         return res.data
+      } catch (err) {
+         console.log(err);
+      }
+   }
+
+   const fetchData = async () => {
+      const messagesFormServer = await fetchMessages();
+
+      setMessages([...messages, ...messagesFormServer]);
+      if (messagesFormServer.length === 0 || messagesFormServer.length < 10) {
+         setHasMore(false);
+      }
+      setPage(page + 1);
+   };
+
+   console.log(currentChat);
 
 
    return (
@@ -150,12 +182,24 @@ const Messenger: FC = () => {
             <div className={styles.boxWrapper}>
                {currentChat ? (
                   <>
-                     {<div className={styles.boxTop}>
-                        {messages.map((m: any) => (
-                           <div key={m._id} ref={scrollRef} >
-                              <Message message={m} own={m.sender === id} />
-                           </div>
-                        ))}
+                     {<div className={styles.boxTop} id="scrollableDiv" ref={scrollRef}>
+                        <InfiniteScroll
+                           dataLength={messages.length}
+                           next={fetchData}
+                           style={{ display: 'flex', flexDirection: 'column-reverse', height: '100%' }} //To put endMessage and loader to the top.
+                           inverse={true}
+                           hasMore={hasMore}
+                           loader={<Loading />}
+                           scrollableTarget="scrollableDiv"
+                           endMessage={"test"}
+                           initialScrollY={5}
+                        >
+                           {messages.map((m: any) => (
+                              <div key={m._id}>
+                                 <Message message={m} own={m.sender === id} />
+                              </div>
+                           ))}
+                        </InfiniteScroll>
                      </div>}
                      <div className={styles.boxBottom}>
                         <textarea
@@ -196,3 +240,4 @@ const Messenger: FC = () => {
 }
 
 export default Messenger
+

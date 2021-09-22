@@ -13,7 +13,6 @@ import { RiMessengerFill, RiSettings3Line } from 'react-icons/ri';
 import { logout } from '../../store/slices/user'
 import { hideBar } from '../../store/slices/preferences'
 
-import { isLoggedIn } from 'axios-jwt'
 
 let cn = classNames;
 
@@ -21,6 +20,7 @@ const Sidebar: React.FC = () => {
    const history = useHistory();
    const dispatch = useDispatch()
    const sidebarOpen = useSelector(state => state.preferences.sidebarOpen);
+   const { userInfo } = useSelector(state => state.user);
 
    const isActive = sidebarOpen && styles['isActive'];
 
@@ -32,8 +32,9 @@ const Sidebar: React.FC = () => {
 
    const handleLogout = () => {
       dispatch(logout())
-      history.push('/')
+      history.replace('/signin')
    }
+
 
    return (
       <IconContext.Provider value={{ className: styles.icon }}>
@@ -54,7 +55,7 @@ const Sidebar: React.FC = () => {
                      </NavLink>
                      <span className={cn(styles.tooltip, isActive)}>Home Page</span>
                   </li>
-                  {isLoggedIn() &&
+                  {userInfo &&
                      <li>
                         <NavLink
                            to="/messenger"
@@ -68,7 +69,7 @@ const Sidebar: React.FC = () => {
                      </li>
                   }
 
-                  {isLoggedIn() &&
+                  {userInfo &&
                      <li>
                         <NavLink
                            to="/settings"
@@ -83,7 +84,7 @@ const Sidebar: React.FC = () => {
                   }
 
 
-                  {!isLoggedIn() &&
+                  {!userInfo &&
                      <li>
                         <NavLink
                            to="/signin"
@@ -96,7 +97,7 @@ const Sidebar: React.FC = () => {
                         <span className={cn(styles.tooltip, isActive)}>Login</span>
                      </li>
                   }
-                  {!isLoggedIn() &&
+                  {!userInfo &&
                      <li>
                         <NavLink
                            to="/signup"
@@ -135,7 +136,7 @@ const Sidebar: React.FC = () => {
                   </li>
                </div>
 
-               {isLoggedIn() &&
+               {userInfo &&
                   <li>
                      <Link
                         to="/"
@@ -149,7 +150,6 @@ const Sidebar: React.FC = () => {
 
             </ul>
          </div>
-
 
       </IconContext.Provider >
    )

@@ -78,18 +78,6 @@ const SocketProvider: React.FC = ({ children }) => {
    }, [dispatch, id, socket]);
 
 
-
-
-   useEffect(() => {
-
-      socket.on("getMessage2", async (data: any) => {
-         await api.get("/api/user?userId=" + data.senderId)
-            .then(res => toast.warning(`${res.data.username}: ` + data.text))
-      })
-   }, [socket]);
-
-
-
    return (
 
       <SocketContext.Provider value={{ socket, connected }}   >

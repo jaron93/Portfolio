@@ -14,4 +14,6 @@ module.exports = function (app) {
    app.post("/api/notification", authJwt.verifyToken, controller.newNotification);
 
    app.get("/api/notification/:receiver", authJwt.verifyToken, controller.findNotification);
+
+   app.delete("/api/notification/:id", authJwt.verifyToken, controller.deleteNotification);
 };

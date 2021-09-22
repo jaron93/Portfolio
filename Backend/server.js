@@ -31,9 +31,9 @@ require('./routes/messages.routes')(app);
 require('./routes/notification.routes')(app);
 
 app.get('/', (req, res) => {
-   res.json({ message: 'Welcome to Jaroslaw api route.' });
+   res.json({ message: 'Welcome to Jaroslaw api.' });
 });
-
+const User = require("./models/user.model");
 
 let users = [];
 
@@ -70,8 +70,6 @@ io.on("connection", (socket) => {
    //when ceonnect
    console.log("a user connected." + socket.id);
 
-   /*    console.log(socket); */
-
    //take userId and socketId from user
    socket.on("addUser", (userId) => {
       addUser(userId, socket.id);
@@ -79,15 +77,16 @@ io.on("connection", (socket) => {
    });
 
    //send and get message
-   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+   socket.on("sendMessage", ({ senderId, senderUsername, receiverId, text }) => {
       const user = getUser(receiverId);
       if (!!user) {
          io.to(user.socketId).emit("getMessage", {
             senderId,
             text,
          }),
-            io.to(user.socketId).emit("getMessage2", {
+            io.to(user.socketId).emit("getMessageNotification", {
                senderId,
+               senderUsername,
                text,
             });
       }

@@ -6,9 +6,9 @@ const Notification = mongoose.model(
       sender: {
          type: mongoose.Schema.Types.ObjectId
       },
-      receiver: [{
+      receiver: {
          type: mongoose.Schema.Types.ObjectId
-      }],
+      },
       message: {
          type: String
       },

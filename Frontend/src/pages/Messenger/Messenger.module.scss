@@ -21,14 +21,17 @@
    .box{
       flex: 7;
       .boxWrapper {
+         width: 100%;
          display: flex;
          flex-direction: column;
          justify-content: space-between;
          position: relative;
          .boxTop {
-            height: 100%;
-            overflow-y: auto;
-            padding-right: 10px;
+            /* height: 100%; */
+            overflow: auto;
+            /* padding-right: 10px; */
+            display: flex;
+            flex-direction: column-reverse;
          }
          .boxBottom {
             margin-top: 5px;

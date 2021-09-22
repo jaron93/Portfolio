@@ -14,7 +14,7 @@ const messengerSlice = createSlice({
          state.conversations = payload
       },
       setMessages: (state, { payload }: PayloadAction<any>) => {
-         state.messages = payload
+         state.messages = Object.assign(payload, state.messages)
       },
       setArrivalMessage: (state, { payload }: PayloadAction<any>) => {
          state.arrivalMessage = payload
