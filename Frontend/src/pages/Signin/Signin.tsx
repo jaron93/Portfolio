@@ -11,24 +11,23 @@ import { toast } from 'react-toastify';
 
 import styles from "./Signin.module.scss"
 
-import { FaUserAlt } from 'react-icons/fa';
 import { FiLock, FiLogIn } from 'react-icons/fi';
-import { HiUserCircle } from 'react-icons/hi'
+import { HiUserCircle, HiOutlineMail } from 'react-icons/hi'
 import { TiWarning } from 'react-icons/ti';
 
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 interface ISigninFormData {
-   username: string;
+   email: string;
    password: string;
 }
 
 const Signin: React.FC = () => {
 
    const validationSchema = Yup.object().shape({
-      username: Yup.string()
-         .required('Username is required'),
+      email: Yup.string()
+         .required('E-mail is required'),
       password: Yup.string()
          .required('Password is required'),
    });
@@ -77,14 +76,14 @@ const Signin: React.FC = () => {
 
                <form onSubmit={handleSubmit(onSubmit)}/*  autoComplete="off" */>
 
-                  <label>Username</label>
+                  <label>E-mail</label>
                   <FormInput
-                     name="username"
-                     type="username"
+                     name="email"
+                     type="email"
                      register={register}
-                     icon={FaUserAlt}
-                     placeholder="example"
-                     errors={errors?.username?.message}
+                     icon={HiOutlineMail}
+                     placeholder="example@site.com"
+                     errors={errors?.email?.message}
                   />
                   <label>Password</label>
                   <FormInput

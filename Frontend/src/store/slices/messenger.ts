@@ -1,28 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const initialState = {
-   conversations: [],
-   messages: [],
-   arrivalMessage: []
+   currentChat: [],
+   currentTitle: "Conversation"
 }
 
 const messengerSlice = createSlice({
    name: 'messenger',
    initialState,
    reducers: {
-      setConversations: (state, { payload }: PayloadAction<any>) => {
-         state.conversations = payload
-      },
-      setMessages: (state, { payload }: PayloadAction<any>) => {
-         state.messages = Object.assign(payload, state.messages)
-      },
-      setArrivalMessage: (state, { payload }: PayloadAction<any>) => {
-         state.arrivalMessage = payload
-      },
+      setCurrentChat: (state, { payload }: PayloadAction<any>) => {
+         state.currentChat = payload
+      }
    }
 })
 
 
+
 export default messengerSlice.reducer
 
-export const { setConversations, setMessages, setArrivalMessage } = messengerSlice.actions;
+export const { setCurrentChat } = messengerSlice.actions;

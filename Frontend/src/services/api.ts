@@ -20,7 +20,10 @@ const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promis
    //  refreshToken: response.data.refresh_token
    //}
 
-   return response.data.accessToken
+   return {
+      accessToken: response.data.accessToken,
+      refreshToken: response.data.refreshToken
+   }
 }
 
 // 3. Add interceptor to your axios instance

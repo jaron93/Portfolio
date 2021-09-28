@@ -1,0 +1,30 @@
+.element {
+   display: flex;
+   align-items: center;
+   padding: 10px;
+   cursor: pointer;
+   &:hover {
+      background-color: rgba(160, 59, 41, 0.753);
+      border-radius: 7px;
+   }
+
+   .avatar {
+      margin-right: 10px;
+   }
+   .info {
+      display: flex;
+      flex-direction: column;
+      .name {
+         font-size: 14px;
+         font-weight: bold;
+         color: white;
+         text-transform: capitalize;
+      }
+      .lastMessage {
+         color: gray;
+         font-size: 14px;
+      }
+   }
+
+ 
+ }

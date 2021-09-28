@@ -9,7 +9,7 @@ interface ISignupFormData {
 }
 
 interface ISigninFormData {
-   username: string;
+   email: string;
    password: string;
 }
 
@@ -35,9 +35,9 @@ export const signupUser = createAsyncThunk(
 
 export const signinUser = createAsyncThunk(
    'users/signin',
-   async ({ username, password }: ISigninFormData, thunkAPI) => {
+   async ({ email, password }: ISigninFormData, thunkAPI) => {
       try {
-         const response = await api.post('/api/auth/signin', { username, password })
+         const response = await api.post('/api/auth/signin', { email, password })
 
          // save tokens to storage
          setAuthTokens({

@@ -1,0 +1,29 @@
+.toolbar {
+   display: flex;
+   align-items: center;
+ 
+   border-bottom: 1px solid rgb(71, 71, 71); 
+ 
+   position: sticky;
+   top: 0px;
+
+   .title {
+     /*  margin: 0; */
+      font-size: 20px;
+      color: white;
+    }
+   
+   .left {
+      flex: 1;
+      padding: 10px;
+      display: flex;
+   }
+
+   .right {
+      flex: 1;
+      padding: 10px;
+      display: flex;
+      flex-direction: row-reverse;
+   }
+}
+ 

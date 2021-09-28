@@ -1,76 +1,32 @@
 @import '../../styles//variables.scss';
 
-.container {
-   margin: 10px;
-   width: 100%;
-   height: calc(100vh - 85px);
-   border-radius: 10px;
+.messenger {
    display: flex;
-   background-color: $element-bg;
+   flex-wrap: nowrap;
+   height: calc(100vh - 85px);
+   flex: 1 1 350px;
+   margin: 10px;
 
-   .menu{
-      flex: 3;
-      .menuInput {
-         width: 75%;
-         padding: 10px 0;
-         background: transparent;
-         border: none;
-         border-bottom: 1px solid gray;
-       }
-   }
-   .box{
-      flex: 7;
-      .boxWrapper {
-         width: 100%;
-         display: flex;
-         flex-direction: column;
-         justify-content: space-between;
-         position: relative;
-         .boxTop {
-            /* height: 100%; */
-            overflow: auto;
-            /* padding-right: 10px; */
-            display: flex;
-            flex-direction: column-reverse;
-         }
-         .boxBottom {
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .messageInput {
-               width: 85%;
-               height: 90px;
-               padding: 10px;
-               background-color: rgba(109, 109, 109, 0.144);
-            }
-            button {
-               width: 70px;
-               height: 40px;
-               border: none;
-               border-radius: 5px;
-               cursor: pointer;
-               background-color: teal;
-               color: white;
-            }
-         }
-         .openConversation {
-            position: absolute;
-            top: 10%;
-            font-size: 30px;
-            color: rgb(224, 220, 220);
-            cursor: default;
-          }
-      }
-   }
-   .online{
-      flex: 1.5;
-   }
-   .menuWrapper,
-   .boxWrapper,
-   .onlineWrapper {
-      padding: 20px;
-      height: 100%;
+
+   .sidebar {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      background-color: $element-bg;
+      border-right: 1px solid rgb(71, 71, 71); 
+      flex: 1 1 auto;
+      align-self: auto;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+      &::-webkit-scrollbar {
+         display: none;
+     }
+    }
+
+   .content {
+      position: relative;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      background-color: $element-bg;
+      flex: 3 1 auto;
    }
 }
- 

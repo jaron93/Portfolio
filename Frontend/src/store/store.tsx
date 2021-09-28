@@ -21,6 +21,7 @@ import announcementsReducer from './slices/announcements'
 const PersistConfig = {
    key: 'root',
    storage: localStorage,
+   blacklist: ['messenger']
 };
 
 const appReducer = combineReducers({

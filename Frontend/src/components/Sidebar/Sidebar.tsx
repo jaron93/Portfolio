@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
       <IconContext.Provider value={{ className: styles.icon }}>
 
          <div className={cn(styles.sidebar, isActive)}>
-            <ul>
+            <ul className={cn(isActive)}>
 
                <div>
 

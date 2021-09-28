@@ -34,16 +34,16 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
    try {
       // Find user
-      const user = await User.findOne({ username: req.body.username });
-      !user && res.status(404).send({ message: "User Not found." });
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+         return res.status(401).send({ message: "User Not found." });
+      }
 
       // Check password
       const validPassword = await bcrypt.compare(req.body.password, user.password)
-      !validPassword && res.status(401).send({
-         accessToken: null,
-         message: "Invalid Password!"
-      });
-
+      if (!validPassword) {
+         return res.status(401).send({ message: "Invalid Password!" });
+      }
       //Create JSON Web Token
       let token = jwt.sign({ id: user.id }, config.secret, {
          expiresIn: 3600 // 1 hour

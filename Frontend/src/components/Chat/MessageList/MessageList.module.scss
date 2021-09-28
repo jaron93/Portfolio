@@ -1,0 +1,35 @@
+.element {
+   position: relative;
+   height: calc(100% - 115px);
+   .container {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column-reverse;
+      padding: 10px;
+      padding-bottom: 40px;
+      overflow-y: scroll;
+   
+       &::-webkit-scrollbar{
+         width: 8px;
+         height: 8px;
+         border-radius: 50px;
+         }
+         &::-webkit-scrollbar-thumb{
+         background: linear-gradient(150deg, transparent 0%,#777777e0 100%);
+         border-radius: 10px;
+         border: 1px solid #7e7e7e;
+         
+         }
+         &::-webkit-scrollbar-thumb:hover{
+         background: linear-gradient(150deg, #a1a19f 0%,#9C339C 100%);
+
+         }
+         &::-webkit-scrollbar-track{
+         background: none;
+         }
+   }
+}
+
+

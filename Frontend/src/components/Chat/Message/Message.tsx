@@ -13,7 +13,9 @@ function Message({ message, own }: any) {
                className={styles.img}
                src={image}
                alt="" />
-            <p className={styles.text}>{message.text}</p>
+            <p className={styles.text}>
+               {message.text}
+            </p>
          </div>
          <div className={styles.bottom}>
             <TimeAgo
