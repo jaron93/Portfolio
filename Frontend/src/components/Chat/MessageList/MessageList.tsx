@@ -1,5 +1,5 @@
 // React, Redux
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 
 // Styles, Api
@@ -15,11 +15,9 @@ import Toolbar from '../Toolbar/Toolbar'
 import ToolbarButton from '../ToolbarButton/ToolbarButton'
 
 // Icons
-import { AiOutlineInfoCircle, AiFillPicture } from 'react-icons/ai'
-import { FaThumbsUp, FaSmile } from 'react-icons/fa'
-
-import 'emoji-mart/css/emoji-mart.css'
-import { Picker } from 'emoji-mart'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
+import moment from 'moment';
+import _ from 'lodash';
 
 export default function MessageList() {
 
@@ -28,7 +26,6 @@ export default function MessageList() {
 
    const observer = useRef<IntersectionObserver>()
    const mountedRef = useRef(true)
-   const targetRef = useRef<HTMLDivElement>(null)
    const dispatch = useDispatch()
    const { socket } = useSocket();
 
@@ -39,8 +36,8 @@ export default function MessageList() {
    const [loading, setLoading] = useState(true)
    const [newMessage, setNewMessage] = useState<any>("")
    const [arrivalMessage, setArrivalMessage] = useState<any>(null);
-   const [openEmoji, setOpenEmoji] = useState(false);
-   const [conversationTitle, setConversationTitle] = useState("Converation")
+   const [friendProfile, setFriendProfile] = useState<any>(null)
+
 
    // Reset Messages and Page each time when conversation has been changed. 
    useEffect(() => {
@@ -109,27 +106,22 @@ export default function MessageList() {
 
    }, [arrivalMessage, currentChat]);
 
-   /*   const newMessage = () => {
-        return
-        sender: id,
-        text: newMessage,
-        conversationId: currentChat._id,
-     }; */
-
-   // Set Username Title 
-   const getCurrentChatTitle = useCallback(() => {
+   // Fetch Friend Profile
+   const getFriendData = useCallback(() => {
       if (currentChat.length === 0) return null
       const friendId = currentChat.members.find((m: String) => m !== id)
       api.get("/api/user?userId=" + friendId)
-         .then(res => setConversationTitle(res.data.username))
+         .then(res => setFriendProfile(res.data))
          .catch(e => console.log(e))
    }, [currentChat, id])
 
    //Run getCurrentChatTitle only if currentChat changed
    useEffect(() => {
-      getCurrentChatTitle()
-   }, [currentChat, getCurrentChatTitle])
+      getFriendData()
+   }, [currentChat, getFriendData])
 
+   // Add new messages to api and emit to server
+   // Submit by pressing enter
    const handleSubmit = async (e: any) => {
       if (e.key === 'Enter') {
          e.preventDefault();
@@ -163,6 +155,37 @@ export default function MessageList() {
       }
    }
 
+
+
+   const handleThumbSubmit = async (e: any) => {
+      e.preventDefault();
+
+      const message = {
+         sender: id,
+         text: "👍",
+         conversationId: currentChat._id,
+      };
+
+      try {
+         const res = await api.post("/api/messages", message);
+         setMessages([res.data, ...messages.slice(0, -1)])
+         setNewMessage("")
+      } catch (err) {
+         console.log(err);
+      }
+
+      const receiverId = currentChat.members.find(
+         (member: any) => member !== id
+      );
+
+      socket.emit("sendMessage", {
+         senderId: id,
+         senderUsername: username,
+         receiverId,
+         text: "👍",
+      });
+   }
+
    //Scroll down messages by using references
    useEffect(() => {
       const scroll = document.getElementById('scrollRef');
@@ -170,27 +193,39 @@ export default function MessageList() {
    }, [newMessage, arrivalMessage]);
 
 
-   useEffect(() => {
-      const checkIfClickedOutside = (e: any) => {
-         // If the menu is open and the clicked target is not within the menu,
-         // then close the menu
-         if (openEmoji && targetRef.current && !targetRef.current.contains(e.target)) {
-            setOpenEmoji(false)
-         }
+   /*    function groupBy(dataToGroupOn: any, fieldNameToGroupOn: _.ValueIteratee<any> | undefined, fieldNameForGroupName: _.PropertyName, fieldNameForChildren: _.PropertyName) {
+         var result = _.chain(dataToGroupOn)
+            .groupBy(fieldNameToGroupOn)
+            .toPairs()
+            .map(function (currentItem) {
+               return _.zipObject([fieldNameForGroupName, fieldNameForChildren], currentItem);
+            })
+            .value();
+         return result;
       }
+   
+      var result = groupBy(messages, 'sender', 'senderId', 'users');
+   
+      console.log(result); */
 
-      document.addEventListener("mousedown", checkIfClickedOutside)
+   const data = [{ "name": "jim", "color": "blue", "age": "22" }, { "name": "Sam", "color": "blue", "age": "33" }, { "name": "eddie", "color": "green", "age": "77" }];
 
-      return () => {
-         // Cleanup the event listener
-         document.removeEventListener("mousedown", checkIfClickedOutside)
-      }
-   }, [openEmoji])
+   console.log(_.chain(data)
+      .groupBy("color")
+      .toPairs()
+      .map(item => _.zipObject(["color", "users"], item))
+      .value());
+
+
 
    return (
       <>
          <Toolbar
-            title={conversationTitle.charAt(0).toUpperCase() + conversationTitle.slice(1)}
+            title={
+               friendProfile ?
+                  friendProfile.username.charAt(0).toUpperCase() + friendProfile.username.slice(1)
+                  : "Conversation"
+            }
             rightItems={[
                <ToolbarButton
                   key="add"
@@ -204,65 +239,34 @@ export default function MessageList() {
 
                   if (messages.length === index + 1) {
                      return <div key={m._id}>
-                        <Message message={m} own={m.sender === id} />
+                        <Message
+                           message={m}
+                           own={m.sender === id}
+                           friendProfile={friendProfile}
+                        />
                      </div>
                   } else {
                      return <div key={m._id} ref={lastElementRef}>
-                        <Message message={m} own={m.sender === id} />
+                        <Message
+                           message={m}
+                           own={m.sender === id}
+                           friendProfile={friendProfile}
+                        />
                      </div>
                   }
-               })
-               }
+               })}
+
                {loading && <Loading />}
             </div>
+
             {currentChat.length !== 0 &&
-               // This component required to remodel.. To much code
-               // Push some component with function inside
                <Compose
                   onChange={(e: any) => setNewMessage(e.target.value)}
                   value={newMessage}
                   onKeyDown={handleSubmit}
-                  leftItems={[
-                     <ToolbarButton
-                        key="picture"
-                        icon={AiFillPicture}
-                        style={{ fontSize: '25' }}
-                     />
-                  ]}
-                  inputItems={[
-                     <ToolbarButton
-                        key="smile"
-                        icon={FaSmile}
-                        color={'#7b7b7bab'}
-                        style={{ fontSize: '22' }}
-                        onClick={() => setOpenEmoji(!openEmoji)}
-                     />
-                  ]}
-                  rightItems={[
-                     <ToolbarButton
-                        key="thumb"
-                        icon={FaThumbsUp}
-                        style={{ fontSize: '25' }}
-                     />
-                  ]} />
-            }
-
-            {openEmoji &&
-               // This div is only for reference with function to close Picker on click outside component 
-               <div ref={targetRef}>
-                  <Picker
-                     style={{ position: 'absolute', bottom: '10px', right: '50px' }}
-                     set='apple'
-                     emojiTooltip={true}
-                     title='Pick your emoji…'
-                     onSelect={(emoji: any) => setNewMessage(newMessage + emoji.native)}
-                     showPreview={false}
-                     showSkinTones={false}
-                  />
-               </div>
-            }
-
-
+                  onSelect={(emoji: any) => setNewMessage(newMessage + emoji.native)}
+                  thumbOnClick={handleThumbSubmit}
+               />}
          </div>
       </>
    )

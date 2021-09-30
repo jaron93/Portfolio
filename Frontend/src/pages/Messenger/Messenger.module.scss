@@ -4,7 +4,7 @@
    display: flex;
    flex-wrap: nowrap;
    height: calc(100vh - 85px);
-   flex: 1 1 350px;
+   width: 100%;
    margin: 10px;
 
 
@@ -13,7 +13,7 @@
       border-bottom-left-radius: 10px;
       background-color: $element-bg;
       border-right: 1px solid rgb(71, 71, 71); 
-      flex: 1 1 auto;
+      flex: 0 1 350px;
       align-self: auto;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
@@ -27,6 +27,7 @@
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
       background-color: $element-bg;
-      flex: 3 1 auto;
+      flex: 1 1 auto;
+      padding: 0 10px;
    }
 }

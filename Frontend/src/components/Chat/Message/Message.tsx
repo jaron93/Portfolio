@@ -1,18 +1,24 @@
-import React from 'react'
-
 import styles from './Message.module.scss'
-import TimeAgo from 'timeago-react';
-import image from '../../../assets/person/2.jpeg'
 
-function Message({ message, own }: any) {
+import TimeAgo from 'timeago-react';
+
+import Avatar from 'react-avatar';
+
+function Message({ message, own, friendProfile }: any) {
 
    return (
       <div className={own ? styles.own : styles.element}>
          <div className={styles.top}>
-            <img
-               className={styles.img}
-               src={image}
-               alt="" />
+            {!own &&
+               <Avatar
+                  name={friendProfile?.username}
+                  size="35"
+                  round
+                  color="#a14712f9"
+                  src={`/avatars/${friendProfile?.profileAvatar}`}
+                  className={styles.avatar}
+               />
+            }
             <p className={styles.text}>
                {message.text}
             </p>

@@ -4,6 +4,8 @@ import styles from './ConversationListItem.module.scss'
 import api from '../../../services/api';
 import Avatar from 'react-avatar';
 
+import shave from 'shave';
+
 function Conversation({ data, currentUserId }: any) {
 
    const [user, setUser] = useState<any>(null);
@@ -37,6 +39,10 @@ function Conversation({ data, currentUserId }: any) {
       getLastMessage()
    }, [data._id]);
 
+   useEffect(() => {
+      shave('#lastMessage', 20);
+   })
+
    return (
       <div className={styles.element}>
          <Avatar
@@ -50,7 +56,12 @@ function Conversation({ data, currentUserId }: any) {
          <div className={styles.info}>
             <span className={styles.name}>{user?.username}</span>
             {lastMessage?.length !== 0 &&
-               <span className={styles.lastMessage}>{lastMessage?.[0].text}</span>
+               <span
+                  className={styles.lastMessage}
+                  id="lastMessage"
+               >
+                  {lastMessage?.[0].text}
+               </span>
             }
          </div>
       </div>
