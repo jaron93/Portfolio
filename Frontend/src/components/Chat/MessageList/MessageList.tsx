@@ -17,7 +17,7 @@ import ToolbarButton from '../ToolbarButton/ToolbarButton'
 // Icons
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import moment from 'moment';
-import _ from 'lodash';
+/* import _ from 'lodash'; */
 
 export default function MessageList() {
 
@@ -208,14 +208,14 @@ export default function MessageList() {
    
       console.log(result); */
 
-   const data = [{ "name": "jim", "color": "blue", "age": "22" }, { "name": "Sam", "color": "blue", "age": "33" }, { "name": "eddie", "color": "green", "age": "77" }];
-
-   console.log(_.chain(data)
-      .groupBy("color")
-      .toPairs()
-      .map(item => _.zipObject(["color", "users"], item))
-      .value());
-
+   /*    const data = [{ "name": "jim", "color": "blue", "age": "22" }, { "name": "Sam", "color": "blue", "age": "33" }, { "name": "eddie", "color": "green", "age": "77" }];
+   
+      console.log(_.chain(data)
+         .groupBy("color")
+         .toPairs()
+         .map(item => _.zipObject(["color", "users"], item))
+         .value());
+    */
 
 
    return (
