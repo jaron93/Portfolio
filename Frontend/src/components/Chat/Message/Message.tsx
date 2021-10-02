@@ -1,36 +1,48 @@
-import styles from './Message.module.scss'
+import React from 'react';
+import moment from 'moment';
 
-import TimeAgo from 'timeago-react';
+import styles from './Messages.module.scss'
+import classNames from 'classnames';
 
 import Avatar from 'react-avatar';
 
-function Message({ message, own, friendProfile }: any) {
+
+let cn = classNames;
+
+export default function Message2({ data, isMine, startsSequence, endsSequence, showTimestamp, friendProfile }: any) {
+
+   const friendlyTimestamp = moment(data.createdAt).format('LLLL');
 
    return (
-      <div className={own ? styles.own : styles.element}>
-         <div className={styles.top}>
-            {!own &&
+      <div className={styles.message}>
+
+         {showTimestamp &&
+            <div className={styles.timestamps}>
+               {friendlyTimestamp}
+            </div>}
+
+         <div className={cn(styles.bubbleContainer, isMine && styles['isMine'],)}>
+            {!isMine &&
                <Avatar
                   name={friendProfile?.username}
                   size="35"
                   round
                   color="#a14712f9"
                   src={`/avatars/${friendProfile?.profileAvatar}`}
-                  className={styles.avatar}
+                  className={cn(styles.avatar, endsSequence && styles['endsSequence'],)}
                />
             }
-            <p className={styles.text}>
-               {message.text}
-            </p>
-         </div>
-         <div className={styles.bottom}>
-            <TimeAgo
-               datetime={message.createdAt}
-               live={false}
-            />
-         </div>
-      </div>
-   )
-}
+            <div className={cn(
+               styles.bubble,
+               isMine && styles['isMine'],
+               startsSequence && styles['startsSequence'],
+               endsSequence && styles['endsSequence'],
+            )}>
+               {data.text}
+            </div>
 
-export default Message
+         </div>
+
+      </div>
+   );
+}

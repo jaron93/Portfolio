@@ -16,7 +16,7 @@ export default function Messenger() {
 
 
             <div className={styles.content}>
-               {currentChat &&
+               {!!currentChat &&
                   <MessageList />
                }
             </div>

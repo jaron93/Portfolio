@@ -1,5 +1,5 @@
 // React, Redux
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 
 // Styles, Api
@@ -17,7 +17,7 @@ import ToolbarButton from '../ToolbarButton/ToolbarButton'
 // Icons
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import moment from 'moment';
-/* import _ from 'lodash'; */
+import _ from 'lodash';
 
 export default function MessageList() {
 
@@ -38,12 +38,15 @@ export default function MessageList() {
    const [arrivalMessage, setArrivalMessage] = useState<any>(null);
    const [friendProfile, setFriendProfile] = useState<any>(null)
 
-
-   // Reset Messages and Page each time when conversation has been changed. 
+   // Reset state each time when conversation has been changed. 
    useEffect(() => {
       setMessages([])
       setPage(1)
+      setHasMore(false)
+      setArrivalMessage(null)
    }, [currentChat])
+   console.log();
+
 
    useEffect(() => {
       const disconnect = () => {
@@ -72,16 +75,20 @@ export default function MessageList() {
       setLoading(true);
       api.get("/api/messages/" + currentChat?._id + `?page=${page}&count=10`)
          .then(res => {
-            setMessages((prev: any) => {
-               return [...new Set([...prev, ...res.data])]
-            })
+            if (!messages.length) setMessages(res.data)
+            // Use Lodash union to remove duplicates messages. It's very important to keep in this way.
+            setMessages((prev: any) => _.unionBy([...prev, ...res.data], '_id'))
             setHasMore(res.data.length > 0)
             setLoading(false)
+            if (!mountedRef.current) return null;
          }).catch(e => {
             console.log(e);
          })
+      return () => {
+         mountedRef.current = false
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [currentChat?._id, dispatch, page]);
-
 
    // Ref to last element from messages
    const lastElementRef = useCallback(node => {
@@ -98,27 +105,25 @@ export default function MessageList() {
       if (node) observer.current.observe(node)
    }, [loading, hasMore, messages, arrivalMessage])
 
+   // Include arrival messages to state
    useEffect(() => {
       arrivalMessage &&
          currentChat?.members.includes(arrivalMessage.sender) &&
-         setMessages((prev: any) => [arrivalMessage, ...prev.slice(0, -1)]);
+         setMessages((prev: any) => [arrivalMessage, ...prev])
       return () => { mountedRef.current = false }
-
    }, [arrivalMessage, currentChat]);
 
-   // Fetch Friend Profile
-   const getFriendData = useCallback(() => {
-      if (currentChat.length === 0) return null
-      const friendId = currentChat.members.find((m: String) => m !== id)
-      api.get("/api/user?userId=" + friendId)
-         .then(res => setFriendProfile(res.data))
-         .catch(e => console.log(e))
-   }, [currentChat, id])
-
-   //Run getCurrentChatTitle only if currentChat changed
-   useEffect(() => {
+   // Fetch Friend Profile, useMemo avoid rerendering Avatar profile after using infinite scroll
+   useMemo(() => {
+      const getFriendData = () => {
+         if (currentChat.length === 0) return null
+         const friendId = currentChat.members.find((m: String) => m !== id)
+         api.get("/api/user?userId=" + friendId)
+            .then(res => setFriendProfile(res.data))
+            .catch(e => console.log(e))
+      }
       getFriendData()
-   }, [currentChat, getFriendData])
+   }, [currentChat.length, currentChat.members, id])
 
    // Add new messages to api and emit to server
    // Submit by pressing enter
@@ -135,7 +140,7 @@ export default function MessageList() {
 
             try {
                const res = await api.post("/api/messages", message);
-               setMessages([res.data, ...messages.slice(0, -1)])
+               setMessages((prev: any) => [...res.data, ...prev])
                setNewMessage("")
             } catch (err) {
                console.log(err);
@@ -155,8 +160,7 @@ export default function MessageList() {
       }
    }
 
-
-
+   // Send thumb
    const handleThumbSubmit = async (e: any) => {
       e.preventDefault();
 
@@ -168,7 +172,7 @@ export default function MessageList() {
 
       try {
          const res = await api.post("/api/messages", message);
-         setMessages([res.data, ...messages.slice(0, -1)])
+         setMessages([...res.data, ...messages])
          setNewMessage("")
       } catch (err) {
          console.log(err);
@@ -186,37 +190,84 @@ export default function MessageList() {
       });
    }
 
-   //Scroll down messages by using references
+   // Scroll down messages by using references
    useEffect(() => {
       const scroll = document.getElementById('scrollRef');
       scroll?.scrollTo(0, 0)
    }, [newMessage, arrivalMessage]);
 
+   // Render messages sorted by groups and timestamps
+   const renderMessages = (): any => {
+      let i = 0;
+      let messageCount = messages.length;
+      let tempMessages = [];
 
-   /*    function groupBy(dataToGroupOn: any, fieldNameToGroupOn: _.ValueIteratee<any> | undefined, fieldNameForGroupName: _.PropertyName, fieldNameForChildren: _.PropertyName) {
-         var result = _.chain(dataToGroupOn)
-            .groupBy(fieldNameToGroupOn)
-            .toPairs()
-            .map(function (currentItem) {
-               return _.zipObject([fieldNameForGroupName, fieldNameForChildren], currentItem);
-            })
-            .value();
-         return result;
+      while (i < messageCount) {
+         let previous = messages[i + 1];
+         let current = messages[i];
+         let next = messages[i - 1];
+         let isMine = current.sender === id;
+         let currentMoment = moment(current.createdAt);
+         let prevBySameAuthor = false;
+         let nextBySameAuthor = false;
+         let startsSequence = true;
+         let endsSequence = true;
+         let showTimestamp = true;
+
+         if (previous) {
+            let previousMoment = moment(previous.createdAt);
+            let previousDuration = moment.duration(currentMoment.diff(previousMoment));
+            prevBySameAuthor = previous.sender === current.sender;
+
+            if (prevBySameAuthor && previousDuration.as('hours') < 1) {
+               startsSequence = false;
+            }
+
+            if (previousDuration.as('hours') < 1) {
+               showTimestamp = false;
+            }
+         }
+
+         if (next) {
+            let nextMoment = moment(next.createdAt);
+            let nextDuration = moment.duration(nextMoment.diff(currentMoment));
+            nextBySameAuthor = next.sender === current.sender;
+
+            if (nextBySameAuthor && nextDuration.as('hours') < 1) {
+               endsSequence = false;
+            }
+         }
+
+         tempMessages.push(
+            (tempMessages.length < 9) ?
+               <div key={i}>
+                  <Message
+                     friendProfile={friendProfile}
+                     isMine={isMine}
+                     startsSequence={startsSequence}
+                     endsSequence={endsSequence}
+                     showTimestamp={showTimestamp}
+                     data={current}
+                  />
+               </div>
+               :
+               <div key={i} ref={lastElementRef}>
+                  <Message
+                     friendProfile={friendProfile}
+                     isMine={isMine}
+                     startsSequence={startsSequence}
+                     endsSequence={endsSequence}
+                     showTimestamp={showTimestamp}
+                     data={current}
+                  />
+               </div>
+         );
+         // Proceed to the next message.
+         i += 1;
       }
-   
-      var result = groupBy(messages, 'sender', 'senderId', 'users');
-   
-      console.log(result); */
 
-   /*    const data = [{ "name": "jim", "color": "blue", "age": "22" }, { "name": "Sam", "color": "blue", "age": "33" }, { "name": "eddie", "color": "green", "age": "77" }];
-   
-      console.log(_.chain(data)
-         .groupBy("color")
-         .toPairs()
-         .map(item => _.zipObject(["color", "users"], item))
-         .value());
-    */
-
+      return tempMessages;
+   }
 
    return (
       <>
@@ -235,27 +286,7 @@ export default function MessageList() {
          />
          <div className={styles.element}>
             <div className={styles.container} id="scrollRef">
-               {messages.map((m: any, index: number) => {
-
-                  if (messages.length === index + 1) {
-                     return <div key={m._id}>
-                        <Message
-                           message={m}
-                           own={m.sender === id}
-                           friendProfile={friendProfile}
-                        />
-                     </div>
-                  } else {
-                     return <div key={m._id} ref={lastElementRef}>
-                        <Message
-                           message={m}
-                           own={m.sender === id}
-                           friendProfile={friendProfile}
-                        />
-                     </div>
-                  }
-               })}
-
+               {renderMessages()}
                {loading && <Loading />}
             </div>
 
