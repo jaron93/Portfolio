@@ -1,7 +1,8 @@
 .message {
    display: flex;
    flex-direction: column;
-   overflow: hidden;
+   position: relative;
+   /* overflow: hidden; */
 
    .timestamps {
       display: flex;
@@ -32,6 +33,7 @@
       }
 
       .bubble {
+         position: relative;
          margin: 1.5px 0;
          background: rgb(224, 224, 224);
          padding: 10px 12px;
@@ -41,6 +43,9 @@
          border-bottom-left-radius: 4px;
          border-top-right-radius: 20px;
          border-bottom-right-radius: 20px;
+         cursor: pointer;
+         word-break: break-all;
+         
    
          &.isMine {
             background: rgb(14, 77, 145);
@@ -63,17 +68,36 @@
          &.startsSequence {
             margin-top: 10px;
             border-top-left-radius: 20px; 
-
          }
          &.endsSequence {
             margin-bottom: 10px;
             border-bottom-left-radius: 20px;
-
          }
+
+         .hourTime {
+            position: absolute;
+            top: 50%;
+            left: -50px;
+            right: 0;
+            transform: translateY(-50%);
+            border-radius: 10px;
+            height: 35px;
+            width: 50px;
+            background: rgb(46, 46, 46);
+            line-height: 35px;
+            text-align: center;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            color: wheat;
+            font-size: 12px;
+         }
+   
    
       }
 
    } 
 
 }
+
+
+
  

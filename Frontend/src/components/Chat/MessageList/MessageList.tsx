@@ -1,6 +1,8 @@
-// React, Redux
+// React, Redux...
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
+import { isConversationSelected } from '../../../store/slices/preferences';
 
 // Styles, Api
 import styles from './MessageList.module.scss'
@@ -16,17 +18,23 @@ import ToolbarButton from '../ToolbarButton/ToolbarButton'
 
 // Icons
 import { AiOutlineInfoCircle } from 'react-icons/ai'
+import { IoMdArrowBack } from 'react-icons/io'
+
 import moment from 'moment';
 import _ from 'lodash';
 
-export default function MessageList() {
+
+
+export default function MessageList({ onlineUsers }: any) {
 
    const { id, username } = useSelector(state => state.user.userInfo);
    const { currentChat } = useSelector(state => state.messenger);
+   const { selectedConversation } = useSelector(state => state.preferences);
 
    const observer = useRef<IntersectionObserver>()
    const mountedRef = useRef(true)
    const dispatch = useDispatch()
+   const history = useHistory();
    const { socket } = useSocket();
 
    // State
@@ -44,10 +52,10 @@ export default function MessageList() {
       setPage(1)
       setHasMore(false)
       setArrivalMessage(null)
+      setNewMessage("")
    }, [currentChat])
-   console.log();
 
-
+   // Get messages form socket
    useEffect(() => {
       const disconnect = () => {
          socket.off('getMessage');
@@ -128,39 +136,48 @@ export default function MessageList() {
    // Add new messages to api and emit to server
    // Submit by pressing enter
    const handleSubmit = async (e: any) => {
-      if (e.key === 'Enter') {
-         e.preventDefault();
 
-         if (newMessage && newMessage.trim() !== '') {
-            const message = {
-               sender: id,
-               text: newMessage,
-               conversationId: currentChat._id,
-            };
+      if (e.keyCode === 13) {
 
-            try {
-               const res = await api.post("/api/messages", message);
-               setMessages((prev: any) => [...res.data, ...prev])
-               setNewMessage("")
-            } catch (err) {
-               console.log(err);
+         if (!e.shiftKey && !e.altKey && !e.ctrlKey) {
+
+            if (newMessage && newMessage.trim() !== '') {
+               const message = {
+                  sender: id,
+                  text: newMessage,
+                  conversationId: currentChat._id,
+               };
+
+               try {
+                  const res = await api.post("/api/messages", message);
+                  setMessages((prev: any) => [...res.data, ...prev])
+                  setNewMessage("")
+               } catch (err) {
+                  console.log(err);
+               }
+
+               const receiverId = currentChat.members.find(
+                  (member: any) => member !== id
+               );
+
+               socket.emit("sendMessage", {
+                  senderId: id,
+                  senderUsername: username,
+                  receiverId,
+                  text: newMessage,
+               });
             }
-
-            const receiverId = currentChat.members.find(
-               (member: any) => member !== id
-            );
-
-            socket.emit("sendMessage", {
-               senderId: id,
-               senderUsername: username,
-               receiverId,
-               text: newMessage,
-            });
          }
+         if (e.shiftKey) {
+            //replace the shift for keycode 13 only
+            return 13;
+         }
+         e.preventDefault();
       }
+
    }
 
-   // Send thumb
+   // Send thumb, for now it's just copy function of handleSubmit without unnecessary 'if'
    const handleThumbSubmit = async (e: any) => {
       e.preventDefault();
 
@@ -188,6 +205,10 @@ export default function MessageList() {
          receiverId,
          text: "👍",
       });
+
+      // Scroll to bottom after pressing Thumb button
+      const scroll = document.getElementById('scrollRef');
+      scroll?.scrollTo(0, 0)
    }
 
    // Scroll down messages by using references
@@ -196,7 +217,7 @@ export default function MessageList() {
       scroll?.scrollTo(0, 0)
    }, [newMessage, arrivalMessage]);
 
-   // Render messages sorted by groups and timestamps
+   // Render messages sorted by groups and timetamps
    const renderMessages = (): any => {
       let i = 0;
       let messageCount = messages.length;
@@ -268,10 +289,32 @@ export default function MessageList() {
 
       return tempMessages;
    }
+   // Back to conversation list from current conversation (Mobile version with splited conversation and messages window)
+   useEffect(() => {
+      return () => {
+         if (history.action === "POP" && selectedConversation) {
+            dispatch(isConversationSelected(false))
+            history.push('/messenger')
+         }
+      }
+   }, [dispatch, history, selectedConversation])
 
    return (
       <>
          <Toolbar
+            leftItems={[
+               <ToolbarButton
+                  key="back"
+                  icon={IoMdArrowBack}
+                  className={styles.backArrow}
+                  onClick={() => {
+                     dispatch(isConversationSelected(false))
+                     history.push('/messenger')
+                  }}
+               />
+            ]}
+            avatar={friendProfile}
+            onlineUsers={onlineUsers}
             title={
                friendProfile ?
                   friendProfile.username.charAt(0).toUpperCase() + friendProfile.username.slice(1)

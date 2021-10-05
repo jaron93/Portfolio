@@ -10,6 +10,9 @@ import 'emoji-mart/css/emoji-mart.css'
 // Icons 
 import { AiFillPicture } from 'react-icons/ai';
 import { FaSmile, FaThumbsUp } from 'react-icons/fa';
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
+import emoji from 'emoji-mart/dist-es/components/emoji/emoji';
+import { Backdrop } from '@mui/material';
 
 export default function Compose(
    { onChange,
@@ -19,24 +22,19 @@ export default function Compose(
       thumbOnClick
    }: any) {
 
+   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
    const targetRef = useRef<HTMLDivElement>(null)
    const [openEmoji, setOpenEmoji] = useState(false);
 
    useEffect(() => {
-      const checkIfClickedOutside = (e: any) => {
-         // If the menu is open and the clicked target is not within the menu,
-         // then close the menu
-         if (openEmoji && targetRef.current && !targetRef.current.contains(e.target)) {
-            setOpenEmoji(false)
-         }
+      if (textareaRef && textareaRef.current) {
+         textareaRef.current.style.height = "0px";
+         const scrollHeight = textareaRef.current.scrollHeight;
+         textareaRef.current.style.height = scrollHeight + "px";
       }
-      document.addEventListener("mousedown", checkIfClickedOutside)
+   }, [value]);
 
-      return () => {
-         // Cleanup the event listener
-         document.removeEventListener("mousedown", checkIfClickedOutside)
-      }
-   }, [openEmoji])
+   useOnClickOutside(targetRef, () => setOpenEmoji(false));
 
    return (
 
@@ -49,12 +47,12 @@ export default function Compose(
          />
 
          <div className={styles.inputContainer}>
-            <input
-               type="text"
+            <textarea
                placeholder="Type a message..."
                onChange={onChange}
                value={value}
                onKeyDown={onKeyDown}
+               ref={textareaRef}
             />
             {/*Middle Emoji Button*/}
             <ToolbarButton
@@ -62,31 +60,33 @@ export default function Compose(
                icon={FaSmile}
                color={'#7b7b7bab'}
                style={{ fontSize: '22' }}
-               onClick={() => setOpenEmoji(!openEmoji)}
+               onClick={() => setOpenEmoji(true)}
             />
          </div>
+
+
          {/*Right Thumb Button*/}
          <ToolbarButton
             key="thumb"
             icon={FaThumbsUp}
-            style={{ fontSize: '25' }}
             onClick={thumbOnClick}
+            style={{ fontSize: '25' }}
          />
 
-         {openEmoji &&
-            // This div is only for reference with function to close Picker on click outside component 
-            <div ref={targetRef}>
+
+         <Backdrop open={openEmoji} invisible={true}>
+            < div ref={targetRef}>
                <Picker
-                  style={{ position: 'absolute', bottom: '50px', right: '50px' }}
-                  set='apple'
+                  style={{ position: 'absolute', bottom: '65px', right: '50px' }}
                   emojiTooltip={true}
-                  title='Pick your emoji…'
                   onSelect={onSelect}
                   showPreview={false}
                   showSkinTones={false}
+                  useButton={true}
                />
             </div>
-         }
-      </div>
+         </Backdrop>
+
+      </div >
    );
 }

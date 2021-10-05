@@ -1,19 +1,52 @@
 import React, { useEffect, useState } from 'react'
+
 import styles from './ConversationListItem.module.scss'
 
 import api from '../../../services/api';
-import Avatar from 'react-avatar';
 
 import shave from 'shave';
 
-function Conversation({ data, currentUserId }: any) {
+import { Avatar, Badge, Stack, styled } from '@mui/material';
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+   '& .MuiBadge-badge': {
+      backgroundColor: '#44b700',
+      color: '#44b700',
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+      '&::after': {
+         position: 'absolute',
+         top: 0,
+         left: 0,
+         width: '100%',
+         height: '100%',
+         borderRadius: '50%',
+         animation: 'ripple 1.2s infinite ease-in-out',
+         border: '1px solid currentColor',
+         content: '""',
+      },
+   },
+   '@keyframes ripple': {
+      '0%': {
+         transform: 'scale(.8)',
+         opacity: 1,
+      },
+      '100%': {
+         transform: 'scale(2.4)',
+         opacity: 0,
+      },
+   },
+}));
+
+function Conversation({ data, currentUserId, onlineUsers }: any) {
 
    const [user, setUser] = useState<any>(null);
    const [lastMessage, setLastMessage] = useState<any>(null);
 
-   useEffect(() => {
-      const friendId = data.members.find((m: String) => m !== currentUserId);
+   const friendId = data.members.find((m: String) => m !== currentUserId);
 
+   const isFriendOnline = !!onlineUsers.find((o: any) => o.userId === friendId)
+
+   useEffect(() => {
       const getUser = async () => {
          try {
             const res = await api.get("/api/user?userId=" + friendId);
@@ -24,7 +57,7 @@ function Conversation({ data, currentUserId }: any) {
          }
       };
       getUser()
-   }, [data.members, currentUserId]);
+   }, [data.members, currentUserId, friendId]);
 
    useEffect(() => {
       const getLastMessage = async () => {
@@ -45,25 +78,32 @@ function Conversation({ data, currentUserId }: any) {
 
    return (
       <div className={styles.element}>
-         <Avatar
-            name={user?.username}
-            size="50"
-            round
-            color="#a14712f9"
-            src={`/avatars/${user?.profileAvatar}`}
-            className={styles.avatar}
-         />
-         <div className={styles.info}>
-            <span className={styles.name}>{user?.username}</span>
-            {lastMessage?.length !== 0 &&
-               <span
-                  className={styles.lastMessage}
-                  id="lastMessage"
-               >
-                  {lastMessage?.[0].text}
-               </span>
-            }
-         </div>
+         <Stack spacing={1.5} direction="row" alignItems="center">
+            <StyledBadge
+               overlap="circular"
+               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+               variant="dot"
+               invisible={!isFriendOnline}
+            >
+               <Avatar
+                  alt={user?.username}
+                  className={styles.avatar}
+                  src={`/avatars/${user?.profileAvatar}`}
+                  sx={{ bgcolor: '#6e2f66' }}
+               />
+            </StyledBadge>
+            <div className={styles.info}>
+               <span className={styles.name}>{user?.username}</span>
+               {lastMessage?.length !== 0 &&
+                  <span
+                     className={styles.lastMessage}
+                     id="lastMessage"
+                  >
+                     {lastMessage?.[0].text}
+                  </span>
+               }
+            </div>
+         </Stack>
       </div>
    )
 }

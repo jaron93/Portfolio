@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const preferencesSlice = createSlice({
    name: 'preferences',
@@ -6,14 +6,12 @@ const preferencesSlice = createSlice({
       /*     locale: 'en-us',
           muted: false, */
       sidebarOpen: true,
+      selectedConversation: false,
    },
    reducers: {
-      /* toggleMuted(state) {
-        state.muted = !state.muted;
+      isConversationSelected: (state, { payload }: PayloadAction<any>) => {
+         state.selectedConversation = payload;
       },
-      setLanguage(state, action: PayloadAction<ILocale>) {
-        state.locale = action.payload;
-      }, */
       toggleBar(state) {
          state.sidebarOpen = !state.sidebarOpen;
       },
@@ -23,7 +21,7 @@ const preferencesSlice = createSlice({
    },
 });
 
-export const { /* toggleMuted, setLanguage, */ toggleBar, hideBar } =
+export const { toggleBar, hideBar, isConversationSelected } =
    preferencesSlice.actions;
 
 export default preferencesSlice.reducer;

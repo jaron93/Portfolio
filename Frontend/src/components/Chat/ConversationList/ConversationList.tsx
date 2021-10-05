@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentChat } from '../../../store/slices/messenger'
+import { isConversationSelected } from '../../../store/slices/preferences';
 
 // Utils
 import styles from './ConversationList.module.scss'
@@ -18,7 +19,7 @@ import Loading from '../../../components/Loading/Loading';
 import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { ImCogs } from 'react-icons/im'
 
-export default function ConversationList() {
+export default function ConversationList({ onlineUsers }: any) {
 
    const dispatch = useDispatch()
    const mountedRef = useRef(true)
@@ -65,11 +66,18 @@ export default function ConversationList() {
          />
          <ConversationSearch />
          {conversations.map((conversation: any) =>
-            <div key={conversation._id} onClick={() => dispatch(setCurrentChat(conversation))}>
+            <div
+               key={conversation._id}
+               onClick={() => (
+                  dispatch(setCurrentChat(conversation)),
+                  dispatch(isConversationSelected(true))
+               )
+               }>
                <ConversationListItem
                   key={conversation._id}
                   data={conversation}
                   currentUserId={id}
+                  onlineUsers={onlineUsers}
                />
             </div>
          )}

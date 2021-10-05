@@ -11,7 +11,7 @@ import { FiUserPlus, FiLogIn, FiHelpCircle } from 'react-icons/fi';
 import { BiMessageDots } from 'react-icons/bi';
 import { RiMessengerFill, RiSettings3Line } from 'react-icons/ri';
 import { logout } from '../../store/slices/user'
-import { hideBar } from '../../store/slices/preferences'
+import { hideBar, isConversationSelected } from '../../store/slices/preferences'
 
 
 let cn = classNames;
@@ -59,7 +59,10 @@ const Sidebar: React.FC = () => {
                      <li>
                         <NavLink
                            to="/messenger"
-                           onClick={() => { handleNavigateToPage() }}
+                           onClick={() => {
+                              handleNavigateToPage()
+                              dispatch(isConversationSelected(false))
+                           }}
                            activeClassName={styles.active}
                         >
                            <RiMessengerFill />

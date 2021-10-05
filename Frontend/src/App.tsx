@@ -1,29 +1,33 @@
-import React from 'react';
-import './styles/global.scss'
-import Sidebar from './components/Sidebar/Sidebar'
-import Header from './components/Header/Header'
+// React, Redux...
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames';
-
-import { SocketProvider } from './hooks/useSocket';
-import { PrivateRoute } from './routes/PrivateRoute';
-
-import Help from './pages/Help/Help';
-import Home from './pages/Home';
-import Messenger from './pages/Messenger/Messenger';
-import Settings from './pages/Settings/Settings';
-import Signin from './pages/Signin/Signin';
-import Signup from './pages/Signup/Signup';
-
 import {
    BrowserRouter as Router,
    Switch,
    Route
 } from "react-router-dom"
+import './styles/global.scss'
 
+// Components
+import Header from './components/Header/Header'
+import Home from './pages/Home';
+import Help from './pages/Help/Help';
+import Messenger from './pages/Messenger/Messenger';
+import Signin from './pages/Signin/Signin';
+import Signup from './pages/Signup/Signup';
+import Sidebar from './components/Sidebar/Sidebar'
+import Settings from './pages/Settings/Settings';
+
+// Classname
+import classNames from 'classnames';
+
+// Hooks
+import { SocketProvider } from './hooks/useSocket';
+import { PrivateRoute } from './routes/PrivateRoute';
+
+// Toaster
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 
 function App() {
