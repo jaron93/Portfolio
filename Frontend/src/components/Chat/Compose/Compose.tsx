@@ -10,9 +10,9 @@ import 'emoji-mart/css/emoji-mart.css'
 // Icons 
 import { AiFillPicture } from 'react-icons/ai';
 import { FaSmile, FaThumbsUp } from 'react-icons/fa';
-import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
-import emoji from 'emoji-mart/dist-es/components/emoji/emoji';
-import { Backdrop } from '@mui/material';
+
+// MUI
+import { ClickAwayListener } from '@mui/material';
 
 export default function Compose(
    { onChange,
@@ -23,7 +23,6 @@ export default function Compose(
    }: any) {
 
    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-   const targetRef = useRef<HTMLDivElement>(null)
    const [openEmoji, setOpenEmoji] = useState(false);
 
    useEffect(() => {
@@ -34,8 +33,6 @@ export default function Compose(
       }
    }, [value]);
 
-   useOnClickOutside(targetRef, () => setOpenEmoji(false));
-
    return (
 
       <div className={styles.compose}>
@@ -43,7 +40,7 @@ export default function Compose(
          <ToolbarButton
             key="picture"
             icon={AiFillPicture}
-            style={{ fontSize: '25' }}
+            size={25}
          />
 
          <div className={styles.inputContainer}>
@@ -54,38 +51,41 @@ export default function Compose(
                onKeyDown={onKeyDown}
                ref={textareaRef}
             />
+
             {/*Middle Emoji Button*/}
-            <ToolbarButton
+
+            <FaSmile
                key="smile"
-               icon={FaSmile}
                color={'#7b7b7bab'}
-               style={{ fontSize: '22' }}
-               onClick={() => setOpenEmoji(true)}
+               size={22}
+               style={{ cursor: 'pointer' }}
+               onClick={() => setOpenEmoji(!openEmoji)}
             />
          </div>
-
 
          {/*Right Thumb Button*/}
          <ToolbarButton
             key="thumb"
             icon={FaThumbsUp}
             onClick={thumbOnClick}
-            style={{ fontSize: '25' }}
+            size={25}
          />
 
+         {openEmoji &&
+            <ClickAwayListener onClickAway={() => setOpenEmoji(false)}>
+               <div>
+                  <Picker
+                     style={{ position: 'absolute', bottom: '65px', right: '50px' }}
+                     emojiTooltip={true}
+                     onSelect={onSelect}
+                     showPreview={false}
+                     showSkinTones={false}
+                     useButton={false}
+                  />
 
-         <Backdrop open={openEmoji} invisible={true}>
-            < div ref={targetRef}>
-               <Picker
-                  style={{ position: 'absolute', bottom: '65px', right: '50px' }}
-                  emojiTooltip={true}
-                  onSelect={onSelect}
-                  showPreview={false}
-                  showSkinTones={false}
-                  useButton={true}
-               />
-            </div>
-         </Backdrop>
+               </div>
+            </ClickAwayListener>
+         }
 
       </div >
    );

@@ -1,5 +1,4 @@
 // React, Redux...
-import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
    BrowserRouter as Router,
@@ -28,7 +27,6 @@ import { PrivateRoute } from './routes/PrivateRoute';
 // Toaster
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 function App() {
 

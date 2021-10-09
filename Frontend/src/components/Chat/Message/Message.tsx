@@ -5,7 +5,6 @@ import styles from './Message.module.scss'
 import classNames from 'classnames';
 
 import Avatar from 'react-avatar';
-import { Transition } from 'react-transition-group';
 import { Fade } from '@mui/material';
 
 let cn = classNames;

@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { setOnlineUsers } from '../store/slices/user'
 import { Socket, io } from 'socket.io-client';
-import { toast } from 'react-toastify';
 import { useState } from 'react';
-import api from '../services/api';
 import { getAccessToken } from 'axios-jwt';
 
 
@@ -35,8 +33,6 @@ const SocketProvider: React.FC = ({ children }) => {
       })
 
    }, [token]);
-
-
 
    useEffect(() => {
       const disconnect = () => {
@@ -69,10 +65,8 @@ const SocketProvider: React.FC = ({ children }) => {
             disconnect(); */
 
       socket.emit("addUser", id);
-      socket.on("getUsers", (users: any) => {
-         dispatch(setOnlineUsers(
-            users.filter((user: any) => user.userId !== id)
-         ));
+      socket.on('getUsers', (users) => {
+         dispatch(setOnlineUsers(users));
       })
 
    }, [dispatch, id, socket]);

@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './Toolbar.module.scss'
 
 import { Avatar, Badge, Stack, styled } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
    '& .MuiBadge-badge': {
@@ -32,7 +33,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
    },
 }));
 
-export default function Toolbar({ title, leftItems, avatar, rightItems, onlineUsers }: any) {
+export default function Toolbar({ title, leftItems, avatar, rightItems }: any) {
+
+   const { onlineUsers } = useSelector(state => state.user);
 
    const friendId = avatar?._id
    const isFriendOnline = !!onlineUsers?.find((o: any) => o.userId === friendId)

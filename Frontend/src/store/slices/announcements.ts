@@ -23,7 +23,7 @@ const announcementsSlice = createSlice({
    initialState,
    reducers: {
       setAnnouncements: (state, { payload }: PayloadAction<IAnnouncement[]>) => {
-         state.announcements = Object.assign(payload, state.announcements)
+         state.announcements = payload
       },
       toggleSeen(state, action) {
          const index = state.announcements.findIndex((a) => a._id === action.payload._id);

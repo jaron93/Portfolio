@@ -14,10 +14,12 @@ exports.newNotification = async (req, res) => {
 
 //Get array with all notification related to user id with token validation.
 exports.findNotification = async (req, res) => {
+   const count = +req.query.count;
+   const page = +req.query.page;
    try {
       const notification = await Notification.find({
          receiver: req.params.receiver,
-      });
+      }).sort({ created_at: -1 }).skip(count * (page - 1)).limit(count);
       if (req.userId == req.params.receiver) {
          res.status(200).json(notification);
       } else {

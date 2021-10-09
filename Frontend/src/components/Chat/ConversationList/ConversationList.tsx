@@ -19,7 +19,7 @@ import Loading from '../../../components/Loading/Loading';
 import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { ImCogs } from 'react-icons/im'
 
-export default function ConversationList({ onlineUsers }: any) {
+export default function ConversationList() {
 
    const dispatch = useDispatch()
    const mountedRef = useRef(true)
@@ -77,7 +77,6 @@ export default function ConversationList({ onlineUsers }: any) {
                   key={conversation._id}
                   data={conversation}
                   currentUserId={id}
-                  onlineUsers={onlineUsers}
                />
             </div>
          )}

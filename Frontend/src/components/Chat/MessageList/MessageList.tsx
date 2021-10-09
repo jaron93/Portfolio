@@ -25,7 +25,7 @@ import _ from 'lodash';
 
 
 
-export default function MessageList({ onlineUsers }: any) {
+export default function MessageList() {
 
    const { id, username } = useSelector(state => state.user.userInfo);
    const { currentChat } = useSelector(state => state.messenger);
@@ -218,7 +218,7 @@ export default function MessageList({ onlineUsers }: any) {
    }, [newMessage, arrivalMessage]);
 
    // Render messages sorted by groups and timetamps
-   const renderMessages = (): any => {
+   const renderMessages = () => {
       let i = 0;
       let messageCount = messages.length;
       let tempMessages = [];
@@ -314,7 +314,6 @@ export default function MessageList({ onlineUsers }: any) {
                />
             ]}
             avatar={friendProfile}
-            onlineUsers={onlineUsers}
             title={
                friendProfile ?
                   friendProfile.username.charAt(0).toUpperCase() + friendProfile.username.slice(1)

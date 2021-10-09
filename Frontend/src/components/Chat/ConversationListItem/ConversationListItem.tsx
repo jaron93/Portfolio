@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react'
+// React, Redux... 
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 import styles from './ConversationListItem.module.scss'
 
 import api from '../../../services/api';
 
+// Cut last messeges 
 import shave from 'shave';
 
 import { Avatar, Badge, Stack, styled } from '@mui/material';
@@ -37,8 +40,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
    },
 }));
 
-function Conversation({ data, currentUserId, onlineUsers }: any) {
+function Conversation({ data, currentUserId }: any) {
 
+   const { onlineUsers } = useSelector(state => state.user);
    const [user, setUser] = useState<any>(null);
    const [lastMessage, setLastMessage] = useState<any>(null);
 
